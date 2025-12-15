@@ -11,12 +11,17 @@ processors:
     timeout: 10s
     send_batch_size: 1024
 
+  # Convert delta to cumulative for Prometheus compatibility
+  deltatocumulative:
+
 exporters:
   prometheus:
     endpoint: 0.0.0.0:8889
     namespace: ""
     resource_to_telemetry_conversion:
       enabled: true
+    # Keep metrics for 3 hours after last update
+    metric_expiration: 180m
 
   debug:
     verbosity: basic
@@ -25,7 +30,7 @@ service:
   pipelines:
     metrics:
       receivers: [otlp]
-      processors: [batch]
+      processors: [batch, deltatocumulative]
       exporters: [prometheus, debug]
     logs:
       receivers: [otlp]
