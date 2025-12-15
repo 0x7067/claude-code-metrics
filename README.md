@@ -8,17 +8,22 @@ Observability stack for collecting and visualizing Claude Code telemetry.
 
 ## Setup
 
-1. Start the stack:
+1. Copy and configure environment variables:
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Start the stack:
    ```bash
    docker compose up -d
    ```
 
-2. Configure Claude Code to send telemetry:
+3. Configure Claude Code to send telemetry:
    ```bash
    claude config set --global telemetryBackend otel
    ```
 
-3. Access Grafana at http://localhost:3000 (admin/admin)
+4. Access Grafana at http://localhost:3000 (credentials from .env)
 
 ## Services
 
