@@ -27,13 +27,13 @@ Observability stack for collecting and visualizing Claude Code telemetry.
    export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
    ```
 
-4. Access Grafana at http://localhost:3000 (credentials from .env)
+4. Access Grafana at http://localhost:3500 (credentials from .env)
 
 ## Services
 
 | Service | Port | Description |
 |---------|------|-------------|
-| Grafana | 3000 | Dashboards |
+| Grafana | 3500 | Dashboards |
 | Prometheus | 9090 | Metrics storage |
 | OTEL Collector | 4317 | OTLP gRPC endpoint |
 | OTEL Collector | 4318 | OTLP HTTP endpoint |
