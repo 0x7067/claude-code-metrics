@@ -577,7 +577,7 @@
           "datasource": {
             "type": "prometheus"
           },
-          "expr": "sum by (session_id) (claude_code_cost_usage_USD_total)",
+          "expr": "max by (session_id, project) (claude_code_cost_usage_USD_total) + 0",
           "format": "table",
           "instant": true,
           "refId": "B"
@@ -586,7 +586,7 @@
           "datasource": {
             "type": "prometheus"
           },
-          "expr": "sum by (session_id) (claude_code_token_usage_tokens_total)",
+          "expr": "sum by (session_id, project) (claude_code_token_usage_tokens_total) + 0",
           "format": "table",
           "instant": true,
           "refId": "C"
@@ -595,10 +595,19 @@
           "datasource": {
             "type": "prometheus"
           },
-          "expr": "max by (session_id) (claude_code_active_time_seconds_total)",
+          "expr": "max by (session_id, project) (claude_code_active_time_seconds_total) + 0",
           "format": "table",
           "instant": true,
           "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "expr": "max by (session_id, project) (timestamp(claude_code_session_count_total))",
+          "format": "table",
+          "instant": true,
+          "refId": "A"
         }
       ],
       "title": "All Sessions",
@@ -611,7 +620,6 @@
           "id": "organize",
           "options": {
             "excludeByName": {
-              "__name__": true,
               "exported_job": true,
               "host_arch": true,
               "instance": true,
@@ -632,28 +640,20 @@
             "indexByName": {
               "Time": 0,
               "session_id": 1,
-              "Value #B": 2,
-              "Value #C": 3,
-              "Value #D": 4
+              "project": 2,
+              "Value #B": 3,
+              "Value #C": 4,
+              "Value #D": 5
             },
             "renameByName": {
-              "Time": "Last Update",
+              "Time": "Started",
+              "Value #A": "Time",
               "Value #B": "Cost",
               "Value #C": "Total Tokens",
               "Value #D": "Duration",
-              "session_id": "Session ID"
+              "session_id": "Session ID",
+              "project": "Project"
             }
-          }
-        },
-        {
-          "id": "convertFieldType",
-          "options": {
-            "conversions": [
-              {
-                "targetField": "Time",
-                "destinationType": "time"
-              }
-            ]
           }
         }
       ],

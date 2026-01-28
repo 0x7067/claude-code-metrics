@@ -1,0 +1,52 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: claude-transcripts
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: claude-transcripts
+          __path__: /claude-projects/**/*.jsonl
+
+    pipeline_stages:
+      # Parse JSON log line
+      - json:
+          expressions:
+            session_id: sessionId
+            msg_type: type
+            timestamp: timestamp
+            model: message.model
+            content: message.content
+            tool_name: message.toolName
+            tool_result: message.result
+
+      # Extract project from file path
+      - regex:
+          source: filename
+          expression: '/claude-projects/(?P<project>[^/]+)/.*'
+
+      # Set timestamp from log entry
+      - timestamp:
+          source: timestamp
+          format: RFC3339
+
+      # Add labels
+      - labels:
+          session_id:
+          project:
+          msg_type:
+          model:
+          tool_name:
+
+      # Output full JSON as log line for display in Grafana
+      - output:
+          source: content
