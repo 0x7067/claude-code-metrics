@@ -656,7 +656,7 @@
           "datasource": {
             "type": "loki"
           },
-          "expr": "{job=\"claude-transcripts\",session_id=\"$session_id\"} | json | msg_type=\"tool_use\" | line_format \"{{.tool_name}}\"",
+          "expr": "{job=\"claude-transcripts\",session_id=\"$session_id\",msg_type=\"assistant\"} |= \"type\\\":\\\"tool_use\" | regexp `\"name\":\"(?P<tool_name>[^\"]+)\"` | line_format \"{\\\"tool_name\\\": \\\"{{.tool_name}}\\\"}\"",
           "refId": "A"
         }
       ],
