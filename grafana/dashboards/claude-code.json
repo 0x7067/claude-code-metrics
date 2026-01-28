@@ -577,7 +577,7 @@
           "datasource": {
             "type": "prometheus"
           },
-          "expr": "max by (session_id, project) (claude_code_cost_usage_USD_total) + 0",
+          "expr": "max by (session_id, project) (max_over_time(claude_code_cost_usage_USD_total[$__range]))",
           "format": "table",
           "instant": true,
           "refId": "B"
@@ -586,7 +586,7 @@
           "datasource": {
             "type": "prometheus"
           },
-          "expr": "sum by (session_id, project) (claude_code_token_usage_tokens_total) + 0",
+          "expr": "sum by (session_id, project) (max_over_time(claude_code_token_usage_tokens_total[$__range]))",
           "format": "table",
           "instant": true,
           "refId": "C"
@@ -595,7 +595,7 @@
           "datasource": {
             "type": "prometheus"
           },
-          "expr": "max by (session_id, project) (claude_code_active_time_seconds_total) + 0",
+          "expr": "max by (session_id, project) (max_over_time(claude_code_active_time_seconds_total[$__range]))",
           "format": "table",
           "instant": true,
           "refId": "D"
@@ -604,7 +604,7 @@
           "datasource": {
             "type": "prometheus"
           },
-          "expr": "max by (session_id, project) (timestamp(claude_code_session_count_total))",
+          "expr": "max by (session_id, project) (max_over_time(timestamp(claude_code_session_count_total)[$__range:]))",
           "format": "table",
           "instant": true,
           "refId": "A"
