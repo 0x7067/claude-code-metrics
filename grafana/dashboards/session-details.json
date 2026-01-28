@@ -602,12 +602,24 @@
           {
             "matcher": {
               "id": "byName",
+              "options": "id"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "ID"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
               "options": "Time"
             },
             "properties": [
               {
-                "id": "custom.width",
-                "value": 180
+                "id": "unit",
+                "value": "dateTimeAsLocalNoDateIfToday"
               }
             ]
           },
@@ -618,8 +630,92 @@
             },
             "properties": [
               {
-                "id": "custom.width",
-                "value": 150
+                "id": "displayName",
+                "value": "Tool Name"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "file_path"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "File Path"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "command"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Command"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "pattern"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Pattern"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Line"
+            },
+            "properties": [
+              {
+                "id": "custom.hidden",
+                "value": true
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "labels"
+            },
+            "properties": [
+              {
+                "id": "custom.hidden",
+                "value": true
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "tsNs"
+            },
+            "properties": [
+              {
+                "id": "custom.hidden",
+                "value": true
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "labelTypes"
+            },
+            "properties": [
+              {
+                "id": "custom.hidden",
+                "value": true
               }
             ]
           }
@@ -656,7 +752,7 @@
           "datasource": {
             "type": "loki"
           },
-          "expr": "{job=\"claude-transcripts\",session_id=\"$session_id\",msg_type=\"assistant\"} |= \"type\\\":\\\"tool_use\" | regexp `\"name\":\"(?P<tool_name>[^\"]+)\"` | line_format \"{\\\"tool_name\\\": \\\"{{.tool_name}}\\\"}\"",
+          "expr": "{job=\"claude-transcripts\",session_id=\"$session_id\",msg_type=\"assistant\"} |= \"type\\\":\\\"tool_use\" | regexp `\"name\":\"(?P<tool_name>[^\"]+)\"` | regexp `\"file_path\":\"(?P<file_path>[^\"]*)\"` | regexp `\"command\":\"(?P<command>[^\"]*)\"` | regexp `\"pattern\":\"(?P<pattern>[^\"]*)\"` | line_format \"{\\\"tool_name\\\": \\\"{{.tool_name}}\\\", \\\"file_path\\\": \\\"{{.file_path}}\\\", \\\"command\\\": \\\"{{.command}}\\\", \\\"pattern\\\": \\\"{{.pattern}}\\\"}\"",
           "refId": "A"
         }
       ],
@@ -667,6 +763,21 @@
           "options": {
             "format": "json",
             "source": "Line"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {
+              "id": 0,
+              "Time": 1,
+              "tool_name": 2,
+              "file_path": 3,
+              "command": 4,
+              "pattern": 5
+            },
+            "renameByName": {}
           }
         }
       ],
