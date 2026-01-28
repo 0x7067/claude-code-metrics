@@ -577,16 +577,7 @@
           "datasource": {
             "type": "prometheus"
           },
-          "expr": "timestamp(claude_code_cost_usage_USD_total)",
-          "format": "table",
-          "instant": true,
-          "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus"
-          },
-          "expr": "claude_code_cost_usage_USD_total",
+          "expr": "sum by (session_id) (claude_code_cost_usage_USD_total)",
           "format": "table",
           "instant": true,
           "refId": "B"
@@ -604,7 +595,7 @@
           "datasource": {
             "type": "prometheus"
           },
-          "expr": "claude_code_active_time_seconds_total",
+          "expr": "max by (session_id) (claude_code_active_time_seconds_total)",
           "format": "table",
           "instant": true,
           "refId": "D"
@@ -620,12 +611,12 @@
           "id": "organize",
           "options": {
             "excludeByName": {
-              "Time": true,
               "__name__": true,
               "exported_job": true,
               "host_arch": true,
               "instance": true,
               "job": true,
+              "model": true,
               "organization_id": true,
               "os_type": true,
               "os_version": true,
@@ -636,22 +627,21 @@
               "terminal_type": true,
               "user_account_uuid": true,
               "user_email": true,
-              "user_id": true,
-              "Value #B": true
+              "user_id": true
             },
             "indexByName": {
-              "Value #A": 0,
+              "Time": 0,
               "session_id": 1,
-              "model": 2,
+              "Value #B": 2,
               "Value #C": 3,
               "Value #D": 4
             },
             "renameByName": {
-              "Value #A": "Last Update",
-              "Value #C": "Tokens",
+              "Time": "Last Update",
+              "Value #B": "Cost",
+              "Value #C": "Total Tokens",
               "Value #D": "Duration",
-              "session_id": "Session ID",
-              "model": "Model"
+              "session_id": "Session ID"
             }
           }
         },
@@ -660,7 +650,7 @@
           "options": {
             "conversions": [
               {
-                "targetField": "Last Update",
+                "targetField": "Time",
                 "destinationType": "time"
               }
             ]
