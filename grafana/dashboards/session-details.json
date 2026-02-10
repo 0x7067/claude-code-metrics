@@ -31,6 +31,18 @@
       "tooltip": "",
       "type": "dashboards",
       "url": "/d/claude-code-metrics"
+    },
+    {
+      "asDropdown": false,
+      "icon": "doc",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": true,
+      "title": "View Transcript",
+      "tooltip": "Open HTML transcript for this session",
+      "type": "link",
+      "url": "http://localhost:8080/${session_id}/"
     }
   ],
   "panels": [
@@ -197,7 +209,7 @@
               }
             ]
           },
-          "unit": "s"
+          "unit": "dtdurations"
         },
         "overrides": []
       },
@@ -429,7 +441,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "cacheRead"
+              "options": "Cache Read"
             },
             "properties": [
               {
@@ -444,7 +456,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "input"
+              "options": "Input"
             },
             "properties": [
               {
@@ -459,7 +471,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "output"
+              "options": "Output"
             },
             "properties": [
               {
@@ -501,9 +513,33 @@
           "datasource": {
             "type": "prometheus"
           },
-          "expr": "sum by (type) (claude_code_token_usage_tokens_total{session_id=\"$session_id\"})",
-          "legendFormat": "{{type}}",
+          "expr": "sum(claude_code_token_usage_tokens_total{session_id=\"$session_id\",type=\"input\"})",
+          "legendFormat": "Input",
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "expr": "sum(claude_code_token_usage_tokens_total{session_id=\"$session_id\",type=\"output\"})",
+          "legendFormat": "Output",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "expr": "sum(claude_code_token_usage_tokens_total{session_id=\"$session_id\",type=\"cacheRead\"})",
+          "legendFormat": "Cache Read",
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "expr": "sum(claude_code_token_usage_tokens_total{session_id=\"$session_id\",type=\"cacheCreation\"})",
+          "legendFormat": "Cache Write",
+          "refId": "D"
         }
       ],
       "title": "Token Usage by Type",
@@ -740,10 +776,10 @@
         "uid": "loki"
       },
       "gridPos": {
-        "h": 20,
+        "h": 16,
         "w": 24,
         "x": 0,
-        "y": 15
+        "y": 19
       },
       "id": 6,
       "options": {
@@ -779,7 +815,7 @@
       },
       "id": 103,
       "panels": [],
-      "title": "Tool Usage",
+      "title": "Tool Calls",
       "type": "row"
     },
     {
@@ -1037,6 +1073,7 @@
   "timepicker": {},
   "timezone": "browser",
   "title": "Claude Code Session Details",
+  "description": "Deep dive into a single Claude Code session — tokens, cost, conversation transcript, and tool calls.",
   "uid": "claude-code-session-details",
   "version": 1
 }

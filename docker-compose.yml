@@ -67,7 +67,22 @@ services:
       - loki
     restart: unless-stopped
 
+  transcript-server:
+    build:
+      context: ./scripts
+      dockerfile: Dockerfile.transcripts
+    container_name: transcript-server
+    environment:
+      - TRANSCRIPT_INTERVAL=120
+    volumes:
+      - ${HOME}/.claude/projects:/claude-projects:ro
+      - transcript_data:/transcripts
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
 volumes:
   prometheus_data:
   grafana_data:
   loki_data:
+  transcript_data:
