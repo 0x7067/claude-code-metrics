@@ -2219,16 +2219,24 @@
       {
         "current": {
           "selected": true,
-          "text": ".*",
-          "value": ".*"
+          "text": "All",
+          "value": "$__all"
         },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "definition": "label_values(claude_code_cost_usage_USD_total, project)",
         "hide": 0,
-        "label": "Project (Regex/Fallback)",
+        "includeAll": true,
+        "label": "Project",
+        "multi": false,
         "name": "project",
         "options": [],
-        "query": ".*",
+        "query": "label_values(claude_code_cost_usage_USD_total, project)",
         "skipUrlSync": false,
-        "type": "textbox"
+        "sort": 1,
+        "type": "query"
       },
       {
         "current": {
