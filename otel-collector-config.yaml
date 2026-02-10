@@ -20,8 +20,9 @@ exporters:
     namespace: ""
     resource_to_telemetry_conversion:
       enabled: true
-    # Keep metrics for 3 hours after last update
-    metric_expiration: 180m
+    # Short expiration so Prometheus staleness markers reflect true last-active time.
+    # All dashboard queries use max_over_time[$__range] so historical data is preserved.
+    metric_expiration: 5m
 
   debug:
     verbosity: basic

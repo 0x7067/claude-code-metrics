@@ -12,6 +12,7 @@ Observability stack for collecting and visualizing Claude Code telemetry.
    ```bash
    cp .env.example .env
    ```
+   Set `GRAFANA_ADMIN_PASSWORD` in `.env` to a strong password before starting.
 
 2. Start the stack:
    ```bash

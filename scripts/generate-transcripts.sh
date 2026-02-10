@@ -7,41 +7,80 @@ INTERVAL="${TRANSCRIPT_INTERVAL:-120}"
 
 mkdir -p "$OUTPUT_DIR"
 
+extract_session_id() {
+  local session_file="$1"
+
+  python3 - "$session_file" <<'PY'
+import json
+import sys
+
+session_file = sys.argv[1]
+
+try:
+    with open(session_file, "r", encoding="utf-8") as fh:
+        for raw_line in fh:
+            line = raw_line.strip()
+            if not line:
+                continue
+            try:
+                data = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            session_id = data.get("sessionId")
+            if session_id:
+                print(session_id)
+                break
+except Exception:
+    pass
+PY
+}
+
 generate() {
   echo "[$(date -Iseconds)] Generating transcripts..."
+  local processed=0
+  local skipped=0
+  local failed=0
 
   # Find all JSONL session files and generate individual transcripts
-  find "$PROJECTS_DIR" -name "*.jsonl" -type f | while read -r session_file; do
-    # Extract session ID from first line of JSONL
-    session_id=$(head -1 "$session_file" 2>/dev/null | python3 -c "
-import sys, json
-try:
-    data = json.loads(sys.stdin.readline())
-    print(data.get('sessionId', ''))
-except:
-    pass
-" 2>/dev/null || true)
+  while IFS= read -r session_file; do
+    session_id="$(extract_session_id "$session_file")"
 
     if [ -z "$session_id" ]; then
+      echo "  Skipping (sessionId not found): $session_file" >&2
+      skipped=$((skipped + 1))
       continue
     fi
 
-    session_dir="$OUTPUT_DIR/$session_id"
+    if [[ "$session_file" == *"/subagents/"* ]]; then
+      agent_id="$(basename "$session_file" .jsonl)"
+      session_dir="$OUTPUT_DIR/$session_id/subagents/$agent_id"
+    else
+      session_dir="$OUTPUT_DIR/$session_id"
+    fi
 
     # Skip if already generated and source hasn't changed
     if [ -f "$session_dir/index.html" ] && [ "$session_dir/index.html" -nt "$session_file" ]; then
+      skipped=$((skipped + 1))
       continue
     fi
 
     mkdir -p "$session_dir"
     echo "  Processing session: $session_id"
-    claude-code-transcripts json "$session_file" -o "$session_dir" 2>/dev/null || true
-  done
+    if ! claude-code-transcripts json "$session_file" -o "$session_dir"; then
+      echo "  ERROR: failed to generate transcript for $session_file" >&2
+      failed=$((failed + 1))
+      continue
+    fi
+    processed=$((processed + 1))
+  done < <(find "$PROJECTS_DIR" -name "*.jsonl" -type f)
 
   # Generate the combined index using 'all' command
-  claude-code-transcripts all -s "$PROJECTS_DIR" -o "$OUTPUT_DIR/all" -q 2>/dev/null || true
+  if ! claude-code-transcripts all -s "$PROJECTS_DIR" -o "$OUTPUT_DIR/all" -q; then
+    echo "  ERROR: failed to generate combined transcript index" >&2
+    failed=$((failed + 1))
+  fi
 
-  echo "[$(date -Iseconds)] Done."
+  echo "[$(date -Iseconds)] Done. processed=$processed skipped=$skipped failed=$failed"
 }
 
 # Initial generation
