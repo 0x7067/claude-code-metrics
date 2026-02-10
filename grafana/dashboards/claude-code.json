@@ -106,7 +106,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "count(count_over_time(claude_code_session_count_total{project=~\"$project\"}[$__range]) > 0)",
+          "expr": "count(sum by (session_id) (count_over_time(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) > 0)",
           "refId": "A"
         }
       ],
@@ -564,7 +564,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(max_over_time(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) / count(count_over_time(claude_code_session_count_total{project=~\"$project\"}[$__range]) > 0)",
+          "expr": "sum(max_over_time(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) / clamp_min(count(sum by (session_id) (count_over_time(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) > 0), 1)",
           "refId": "A"
         }
       ],
@@ -853,7 +853,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "max by (session_id, project) (max_over_time(timestamp(claude_code_session_count_total{project=~\"$project\"})[$__range:])) * 1000 and on(session_id) max by (session_id) (max_over_time(claude_code_cost_usage_USD_total{model=~\"$model\"}[$__range]))",
+          "expr": "max by (session_id, project) (max_over_time(timestamp(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"})[$__range:])) * 1000",
           "format": "table",
           "instant": true,
           "refId": "A"
@@ -2219,26 +2219,16 @@
       {
         "current": {
           "selected": true,
-          "text": "All",
-          "value": "$__all"
+          "text": ".*",
+          "value": ".*"
         },
-        "datasource": {
-          "type": "prometheus",
-          "uid": "prometheus"
-        },
-        "definition": "label_values(claude_code_session_count_total, project)",
         "hide": 0,
-        "includeAll": true,
-        "label": "Project",
-        "multi": false,
+        "label": "Project (Regex/Fallback)",
         "name": "project",
         "options": [],
-        "query": "label_values(claude_code_session_count_total, project)",
-        "refresh": 2,
-        "regex": "",
+        "query": ".*",
         "skipUrlSync": false,
-        "sort": 1,
-        "type": "query"
+        "type": "textbox"
       },
       {
         "current": {
