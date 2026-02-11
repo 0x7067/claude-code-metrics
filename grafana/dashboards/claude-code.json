@@ -649,12 +649,565 @@
       "type": "stat"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "yellow",
+                "value": 0.5
+              },
+              {
+                "color": "red",
+                "value": 2
+              }
+            ]
+          },
+          "decimals": 2,
+          "unit": "currencyUSD"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 0,
+        "y": 5
+      },
+      "id": 200,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 24
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range]))",
+          "refId": "A"
+        }
+      ],
+      "title": "Period Cost",
+      "description": "Total cost in the selected time range (compared to previous equivalent period)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "text"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "decimals": 1,
+          "unit": "percent",
+          "noValue": "N/A"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "\u2191"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "\u2193"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 5,
+        "y": 5
+      },
+      "id": 203,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 10,
+          "valueSize": 20
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "(sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) - sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range))) / clamp_min(sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)), 0.001) * 100 >= 0",
+          "legendFormat": "\u2191",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "-((sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) - sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range))) / clamp_min(sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)), 0.001) * 100) > 0",
+          "legendFormat": "\u2193",
+          "refId": "B"
+        }
+      ],
+      "title": "vs prev",
+      "description": "Percent change in cost vs the previous period. Green \u2193 = decrease, Red \u2191 = increase.",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "purple",
+                "value": 0
+              },
+              {
+                "color": "semi-dark-yellow",
+                "value": 500000
+              },
+              {
+                "color": "red",
+                "value": 2000000
+              }
+            ]
+          },
+          "decimals": 0,
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 8,
+        "y": 5
+      },
+      "id": 201,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 24
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range]))",
+          "refId": "A"
+        }
+      ],
+      "title": "Period Tokens",
+      "description": "Total tokens consumed in the selected time range",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "text"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "decimals": 1,
+          "unit": "percent",
+          "noValue": "N/A"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "\u2191"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "\u2193"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 13,
+        "y": 5
+      },
+      "id": 204,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 10,
+          "valueSize": 20
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "(sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range])) - sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range))) / clamp_min(sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)), 0.001) * 100 >= 0",
+          "legendFormat": "\u2191",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "-((sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range])) - sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range))) / clamp_min(sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)), 0.001) * 100) > 0",
+          "legendFormat": "\u2193",
+          "refId": "B"
+        }
+      ],
+      "title": "vs prev",
+      "description": "Percent change in tokens vs the previous period. Green \u2193 = decrease, Red \u2191 = increase.",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": 0
+              }
+            ]
+          },
+          "decimals": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 16,
+        "y": 5
+      },
+      "id": 202,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 24
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "count(sum by (session_id) (count_over_time(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) > 0)",
+          "refId": "A"
+        }
+      ],
+      "title": "Period Sessions",
+      "description": "Number of unique sessions active in the selected time range",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "text"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "decimals": 1,
+          "unit": "percent",
+          "noValue": "N/A"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "\u2191"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "\u2193"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 21,
+        "y": 5
+      },
+      "id": 205,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 10,
+          "valueSize": 20
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "(count(sum by (session_id) (count_over_time(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) > 0) - count(sum by (session_id) (count_over_time(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) > 0)) / clamp_min(count(sum by (session_id) (count_over_time(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) > 0), 1) * 100 >= 0",
+          "legendFormat": "\u2191",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "-((count(sum by (session_id) (count_over_time(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) > 0) - count(sum by (session_id) (count_over_time(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) > 0)) / clamp_min(count(sum by (session_id) (count_over_time(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) > 0), 1) * 100) > 0",
+          "legendFormat": "\u2193",
+          "refId": "B"
+        }
+      ],
+      "title": "vs prev",
+      "description": "Percent change in session count vs the previous period.",
+      "type": "stat"
+    },
+    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 5
+        "y": 9
       },
       "id": 105,
       "panels": [],
@@ -784,6 +1337,56 @@
                 "value": "dateTimeFromNow"
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "color": "blue",
+                        "index": 1,
+                        "text": "Completed"
+                      },
+                      "1": {
+                        "color": "green",
+                        "index": 0,
+                        "text": "Active"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              },
+              {
+                "id": "custom.width",
+                "value": 90
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Model"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 180
+              }
+            ]
           }
         ]
       },
@@ -791,7 +1394,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 6
+        "y": 10
       },
       "id": 106,
       "options": {
@@ -801,7 +1404,8 @@
           "fields": [
             "Cost",
             "Tokens",
-            "Active Time"
+            "Active Time",
+            "Status"
           ],
           "reducer": [
             "sum"
@@ -823,7 +1427,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "max by (session_id, project) (max_over_time(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range]))",
+          "expr": "max by (session_id, project, model) (max_over_time(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range]))",
           "format": "table",
           "instant": true,
           "refId": "B"
@@ -857,6 +1461,16 @@
           "format": "table",
           "instant": true,
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "max by (session_id, project) (max_over_time(timestamp(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"})[$__range:])) > bool (time() - 300)",
+          "format": "table",
+          "instant": true,
+          "refId": "E"
         }
       ],
       "title": "All Sessions",
@@ -874,7 +1488,6 @@
               "host_arch": true,
               "instance": true,
               "job": true,
-              "model": true,
               "organization_id": true,
               "os_type": true,
               "os_version": true,
@@ -888,20 +1501,24 @@
               "user_id": true
             },
             "indexByName": {
-              "Value #A": 0,
-              "project": 1,
-              "session_id": 2,
-              "Value #B": 3,
-              "Value #C": 4,
-              "Value #D": 5
+              "Value #E": 0,
+              "Value #A": 1,
+              "project": 2,
+              "session_id": 3,
+              "model": 4,
+              "Value #B": 5,
+              "Value #C": 6,
+              "Value #D": 7
             },
             "renameByName": {
               "Value #A": "Last Active",
               "Value #B": "Cost",
               "Value #C": "Tokens",
               "Value #D": "Active Time",
+              "Value #E": "Status",
               "session_id": "Session",
-              "project": "Project"
+              "project": "Project",
+              "model": "Model"
             }
           }
         }
@@ -914,7 +1531,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 14
+        "y": 18
       },
       "id": 101,
       "panels": [],
@@ -983,7 +1600,7 @@
         "h": 8,
         "w": 7,
         "x": 0,
-        "y": 15
+        "y": 19
       },
       "id": 6,
       "options": {
@@ -1087,7 +1704,7 @@
         "h": 8,
         "w": 6,
         "x": 7,
-        "y": 15
+        "y": 19
       },
       "id": 20,
       "options": {
@@ -1183,7 +1800,7 @@
         "h": 8,
         "w": 6,
         "x": 13,
-        "y": 15
+        "y": 19
       },
       "id": 15,
       "options": {
@@ -1289,7 +1906,7 @@
         "h": 8,
         "w": 5,
         "x": 19,
-        "y": 15
+        "y": 19
       },
       "id": 14,
       "options": {
@@ -1338,7 +1955,505 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 23
+        "y": 27
+      },
+      "id": 300,
+      "panels": [],
+      "title": "Model Analytics",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "currencyUSD",
+          "decimals": 2
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*opus.*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "purple",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*sonnet.*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*haiku.*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 28
+      },
+      "id": 301,
+      "options": {
+        "barRadius": 0.1,
+        "barWidth": 0.7,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "horizontal",
+        "showValue": "always",
+        "stacking": "none",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "sort_desc(sum by (model) (max_over_time(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])))",
+          "legendFormat": "{{model}}",
+          "format": "table",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Cost by Model",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Cost"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyUSD"
+              },
+              {
+                "id": "decimals",
+                "value": 4
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background",
+                  "mode": "basic"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "transparent",
+                      "value": null
+                    },
+                    {
+                      "color": "rgba(255, 152, 48, 0.15)",
+                      "value": 1
+                    },
+                    {
+                      "color": "rgba(242, 73, 92, 0.18)",
+                      "value": 10
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Sessions"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Input"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "locale"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Output"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "locale"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Cache Read"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "locale"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Cache Write"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "locale"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Cache %"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 0.5
+                    },
+                    {
+                      "color": "green",
+                      "value": 0.8
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Pricing"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 260
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 16,
+        "x": 8,
+        "y": 28
+      },
+      "id": 302,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": [
+            "Cost",
+            "Sessions",
+            "Input",
+            "Output",
+            "Cache Read",
+            "Cache Write"
+          ],
+          "reducer": [
+            "sum"
+          ],
+          "show": true
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Cost"
+          }
+        ]
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "sum by (model) (max_over_time(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range]))",
+          "format": "table",
+          "instant": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "count by (model) (sum by (session_id, model) (count_over_time(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) > 0)",
+          "format": "table",
+          "instant": true,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "sum by (model) (max_over_time(claude_code_token_usage_tokens_total{type=\"input\",project=~\"$project\",model=~\"$model\"}[$__range]))",
+          "format": "table",
+          "instant": true,
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "sum by (model) (max_over_time(claude_code_token_usage_tokens_total{type=\"output\",project=~\"$project\",model=~\"$model\"}[$__range]))",
+          "format": "table",
+          "instant": true,
+          "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "sum by (model) (max_over_time(claude_code_token_usage_tokens_total{type=\"cacheRead\",project=~\"$project\",model=~\"$model\"}[$__range]))",
+          "format": "table",
+          "instant": true,
+          "refId": "E"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "sum by (model) (max_over_time(claude_code_token_usage_tokens_total{type=\"cacheCreation\",project=~\"$project\",model=~\"$model\"}[$__range]))",
+          "format": "table",
+          "instant": true,
+          "refId": "F"
+        }
+      ],
+      "title": "Model Breakdown",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "exported_job": true,
+              "host_arch": true,
+              "instance": true,
+              "job": true,
+              "organization_id": true,
+              "os_type": true,
+              "os_version": true,
+              "otel_scope_name": true,
+              "otel_scope_version": true,
+              "service_name": true,
+              "service_version": true,
+              "terminal_type": true,
+              "user_account_uuid": true,
+              "user_email": true,
+              "user_id": true,
+              "project": true,
+              "session_id": true,
+              "type": true
+            },
+            "indexByName": {
+              "model": 0,
+              "Value #A": 1,
+              "Value #B": 2,
+              "Value #C": 3,
+              "Value #D": 4,
+              "Value #E": 5,
+              "Value #F": 6
+            },
+            "renameByName": {
+              "model": "Model",
+              "Value #A": "Cost",
+              "Value #B": "Sessions",
+              "Value #C": "Input",
+              "Value #D": "Output",
+              "Value #E": "Cache Read",
+              "Value #F": "Cache Write"
+            }
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "mode": "binary",
+            "binary": {
+              "left": "Cache Read",
+              "operator": "/",
+              "right": "Input",
+              "reducer": "sum"
+            },
+            "alias": "Cache %",
+            "replaceFields": false
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 36
       },
       "id": 102,
       "panels": [],
@@ -1407,7 +2522,7 @@
         "h": 8,
         "w": 8,
         "x": 0,
-        "y": 24
+        "y": 37
       },
       "id": 5,
       "options": {
@@ -1573,7 +2688,7 @@
         "h": 8,
         "w": 8,
         "x": 8,
-        "y": 24
+        "y": 37
       },
       "id": 10,
       "options": {
@@ -1712,7 +2827,7 @@
         "h": 8,
         "w": 8,
         "x": 16,
-        "y": 24
+        "y": 37
       },
       "id": 16,
       "options": {
@@ -1767,7 +2882,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 32
+        "y": 45
       },
       "id": 103,
       "panels": [],
@@ -1867,7 +2982,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 33
+        "y": 46
       },
       "id": 7,
       "options": {
@@ -1967,7 +3082,7 @@
         "h": 7,
         "w": 12,
         "x": 12,
-        "y": 33
+        "y": 46
       },
       "id": 8,
       "options": {
@@ -2021,7 +3136,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 40
+        "y": 53
       },
       "id": 104,
       "panels": [],
@@ -2088,7 +3203,7 @@
         "h": 6,
         "w": 12,
         "x": 0,
-        "y": 41
+        "y": 54
       },
       "id": 9,
       "options": {
@@ -2165,7 +3280,7 @@
         "h": 6,
         "w": 12,
         "x": 12,
-        "y": 41
+        "y": 54
       },
       "id": 19,
       "options": {
@@ -2285,7 +3400,7 @@
   "timepicker": {},
   "timezone": "browser",
   "title": "Claude Code Metrics",
-  "description": "Overview of Claude Code usage across all sessions — cost, tokens, code activity, and tool usage.",
+  "description": "Overview of Claude Code usage across all sessions \u2014 cost, tokens, code activity, and tool usage.",
   "uid": "claude-code-metrics",
-  "version": 19
+  "version": 20
 }
