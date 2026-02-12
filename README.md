@@ -44,6 +44,14 @@ Session-level dashboards require `OTEL_METRICS_INCLUDE_SESSION_ID=true` (default
 Model filtering only applies to cost and token panels; session-level metrics are not model-scoped.
 This repo uses promtail to scrape transcript logs; OTEL log events from the spec are not ingested into Loki by default.
 
+### Tool Details
+
+The "Most Used Commands" panel extracts program names from Bash tool events and is always available. The "Most Used Skills" panel requires an additional environment variable to capture skill names:
+
+```bash
+export OTEL_LOG_TOOL_DETAILS=1
+```
+
 ## Services
 
 | Service | Port | Description |
