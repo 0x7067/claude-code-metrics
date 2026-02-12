@@ -5,9 +5,11 @@ RUN pip install --no-cache-dir claude-code-transcripts
 COPY generate-transcripts.sh /usr/local/bin/generate-transcripts.sh
 RUN chmod +x /usr/local/bin/generate-transcripts.sh
 
+COPY serve-transcripts.py /usr/local/bin/serve-transcripts.py
+
 VOLUME ["/claude-projects", "/transcripts"]
 
 EXPOSE 8080
 
 # Run transcript generation in background, serve via HTTP in foreground
-CMD bash -c '/usr/local/bin/generate-transcripts.sh & python3 -m http.server 8080 --directory /transcripts'
+CMD bash -c '/usr/local/bin/generate-transcripts.sh & python3 /usr/local/bin/serve-transcripts.py /transcripts'
