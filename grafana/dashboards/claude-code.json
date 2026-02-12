@@ -2528,12 +2528,32 @@
             "mode": "binary",
             "binary": {
               "left": "Cache Read",
+              "operator": "+",
+              "right": "Input"
+            },
+            "alias": "Cache + Input",
+            "replaceFields": false
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "mode": "binary",
+            "binary": {
+              "left": "Cache Read",
               "operator": "/",
-              "right": "Input",
-              "reducer": "sum"
+              "right": "Cache + Input"
             },
             "alias": "Cache %",
             "replaceFields": false
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Cache + Input": true
+            }
           }
         }
       ],
@@ -2612,7 +2632,7 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 8,
+        "w": 6,
         "x": 0,
         "y": 37
       },
@@ -2779,8 +2799,8 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 8,
-        "x": 8,
+        "w": 6,
+        "x": 6,
         "y": 37
       },
       "id": 10,
@@ -2919,8 +2939,8 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 8,
-        "x": 16,
+        "w": 6,
+        "x": 12,
         "y": 37
       },
       "id": 16,
@@ -2969,6 +2989,113 @@
       ],
       "title": "Cache vs Input Tokens",
       "description": "Tokens per interval in the selected range",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "area"
+            }
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": 0
+              },
+              {
+                "color": "yellow",
+                "value": 50
+              },
+              {
+                "color": "green",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 18,
+        "y": 37
+      },
+      "id": 23,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "lastNotNull"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "sum(increase(claude_code_token_usage_tokens_total{type=\"cacheRead\",project=~\"$project\",model=~\"$model\"}[$__rate_interval])) / clamp_min(sum(increase(claude_code_token_usage_tokens_total{type=\"cacheRead\",project=~\"$project\",model=~\"$model\"}[$__rate_interval])) + sum(increase(claude_code_token_usage_tokens_total{type=\"input\",project=~\"$project\",model=~\"$model\"}[$__rate_interval])), 1) * 100",
+          "legendFormat": "Cache Hit %",
+          "refId": "A"
+        }
+      ],
+      "title": "Cache Hit % Over Time",
+      "description": "Percentage of input tokens served from cache per interval",
       "type": "timeseries"
     },
     {
@@ -3770,6 +3897,7 @@
         "name": "project",
         "options": [],
         "query": "label_values(claude_code_cost_usage_USD_total, project)",
+        "refresh": 2,
         "skipUrlSync": false,
         "sort": 1,
         "type": "query"
