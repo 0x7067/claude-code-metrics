@@ -30,6 +30,20 @@ Observability stack for collecting and visualizing Claude Code telemetry.
 
 4. Access Grafana at http://localhost:3500 (credentials from .env)
 
+## Metrics and Labels
+
+The dashboards assume the standard Claude Code metric set and labels. See `docs/metrics.md` for the mapping between Claude Code metric names and the Prometheus names used in Grafana.
+
+If you want the `Project` filter to work, define a `project` resource attribute for each environment:
+
+```bash
+export OTEL_RESOURCE_ATTRIBUTES="project=my-project"
+```
+
+Session-level dashboards require `OTEL_METRICS_INCLUDE_SESSION_ID=true` (default is true).
+Model filtering only applies to cost and token panels; session-level metrics are not model-scoped.
+This repo uses promtail to scrape transcript logs; OTEL log events from the spec are not ingested into Loki by default.
+
 ## Services
 
 | Service | Port | Description |

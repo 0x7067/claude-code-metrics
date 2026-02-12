@@ -26,7 +26,7 @@ scrape_configs:
             timestamp: timestamp
             model: message.model
             content: message.content
-            tool_name: message.toolName
+            hook_name: data.hookName
             tool_result: message.result
 
       # Extract project from file path
@@ -45,7 +45,7 @@ scrape_configs:
           project:
           msg_type:
           model:
-          tool_name:
+          hook_name:
 
       # Output full JSON as log line for display in Grafana
       - output:

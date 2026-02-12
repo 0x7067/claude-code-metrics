@@ -123,6 +123,7 @@
             "uid": "prometheus"
           },
           "expr": "max(claude_code_cost_usage_USD_total{session_id=\"$session_id\"})",
+          "instant": true,
           "refId": "A"
         }
       ],
@@ -185,6 +186,7 @@
             "uid": "prometheus"
           },
           "expr": "sum(max(claude_code_token_usage_tokens_total{session_id=\"$session_id\"}) by (type))",
+          "instant": true,
           "refId": "A"
         }
       ],
@@ -246,6 +248,7 @@
             "uid": "prometheus"
           },
           "expr": "max(claude_code_active_time_seconds_total{session_id=\"$session_id\"})",
+          "instant": true,
           "refId": "A"
         }
       ],
@@ -316,6 +319,7 @@
             "uid": "prometheus"
           },
           "expr": "sum(max_over_time(claude_code_token_usage_tokens_total{session_id=\"$session_id\",type=\"cacheRead\"}[$__range])) / clamp_min((sum(max_over_time(claude_code_token_usage_tokens_total{session_id=\"$session_id\",type=\"cacheRead\"}[$__range])) + sum(max_over_time(claude_code_token_usage_tokens_total{session_id=\"$session_id\",type=\"input\"}[$__range]))), 1) * 100",
+          "instant": true,
           "refId": "A"
         }
       ],
@@ -368,10 +372,12 @@
           },
           "expr": "sum by (model) (max_over_time(claude_code_token_usage_tokens_total{session_id=\"$session_id\"}[$__range]))",
           "legendFormat": "{{model}}",
+          "instant": true,
           "refId": "A"
         }
       ],
       "title": "Token Usage by Model",
+      "description": "Token distribution by model for the selected session",
       "type": "bargauge"
     },
     {
@@ -519,7 +525,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(claude_code_token_usage_tokens_total{session_id=\"$session_id\",type=\"input\"})",
+          "expr": "sum(increase(claude_code_token_usage_tokens_total{session_id=\"$session_id\",type=\"input\"}[$__rate_interval]))",
           "legendFormat": "Input",
           "refId": "A"
         },
@@ -528,7 +534,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(claude_code_token_usage_tokens_total{session_id=\"$session_id\",type=\"output\"})",
+          "expr": "sum(increase(claude_code_token_usage_tokens_total{session_id=\"$session_id\",type=\"output\"}[$__rate_interval]))",
           "legendFormat": "Output",
           "refId": "B"
         },
@@ -537,7 +543,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(claude_code_token_usage_tokens_total{session_id=\"$session_id\",type=\"cacheRead\"})",
+          "expr": "sum(increase(claude_code_token_usage_tokens_total{session_id=\"$session_id\",type=\"cacheRead\"}[$__rate_interval]))",
           "legendFormat": "Cache Read",
           "refId": "C"
         },
@@ -546,12 +552,13 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(claude_code_token_usage_tokens_total{session_id=\"$session_id\",type=\"cacheCreation\"})",
+          "expr": "sum(increase(claude_code_token_usage_tokens_total{session_id=\"$session_id\",type=\"cacheCreation\"}[$__rate_interval]))",
           "legendFormat": "Cache Write",
           "refId": "D"
         }
       ],
       "title": "Token Usage by Type",
+      "description": "Tokens consumed per interval in the selected range",
       "type": "timeseries"
     },
     {
@@ -659,6 +666,7 @@
         }
       ],
       "title": "Cost Over Time",
+      "description": "Cumulative cost over time for the selected session",
       "type": "timeseries"
     },
     {
@@ -754,6 +762,7 @@
           },
           "expr": "max(claude_code_lines_of_code_count_total{session_id=\"$session_id\",type=\"added\"}) or vector(0)",
           "legendFormat": "Added",
+          "instant": true,
           "refId": "A"
         },
         {
@@ -763,10 +772,12 @@
           },
           "expr": "max(claude_code_lines_of_code_count_total{session_id=\"$session_id\",type=\"removed\"}) or vector(0)",
           "legendFormat": "Removed",
+          "instant": true,
           "refId": "B"
         }
       ],
       "title": "Lines of Code",
+      "description": "Total lines added and removed in this session",
       "type": "stat"
     },
     {
@@ -1064,14 +1075,14 @@
           "type": "prometheus",
           "uid": "prometheus"
         },
-        "definition": "label_values(claude_code_cost_usage_USD_total, session_id)",
+        "definition": "label_values(claude_code_session_count_total, session_id)",
         "hide": 0,
         "includeAll": false,
         "label": "Session ID",
         "multi": false,
         "name": "session_id",
         "options": [],
-        "query": "label_values(claude_code_cost_usage_USD_total, session_id)",
+        "query": "label_values(claude_code_session_count_total, session_id)",
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
@@ -1103,5 +1114,5 @@
   "title": "Claude Code Session Details",
   "description": "Deep dive into a single Claude Code session — tokens, cost, conversation transcript, and tool calls.",
   "uid": "claude-code-session-details",
-  "version": 1
+  "version": 5
 }
