@@ -926,7 +926,7 @@
         "h": 16,
         "w": 24,
         "x": 0,
-        "y": 19
+        "y": 24
       },
       "id": 6,
       "options": {
@@ -946,7 +946,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "{service_name=\"claude-code\"} | session_id=\"$session_id\"",
+          "expr": "{job=\"claude-transcripts\", session_id=\"$session_id\"}",
           "refId": "A"
         }
       ],
@@ -959,7 +959,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 35
+        "y": 40
       },
       "id": 103,
       "panels": [],
@@ -1121,7 +1121,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 36
+        "y": 41
       },
       "id": 7,
       "options": {

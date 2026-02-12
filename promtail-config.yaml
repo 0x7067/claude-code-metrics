@@ -47,6 +47,9 @@ scrape_configs:
           model:
           hook_name:
 
-      # Output full JSON as log line for display in Grafana
+      # Format readable conversation line for Grafana
+      - template:
+          source: display_line
+          template: '[{{ .msg_type }}] {{ .content }}'
       - output:
-          source: content
+          source: display_line
