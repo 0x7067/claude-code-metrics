@@ -15,6 +15,14 @@ processors:
   # Assumes Claude Code emits delta sums (per exporter defaults).
   deltatocumulative:
 
+  # Ensure service.name is set so Loki generates a service_name index label.
+  # Uses insert (no-op if already present) so Claude Code's own value wins.
+  resource/defaults:
+    attributes:
+      - action: insert
+        key: service.name
+        value: claude-code
+
 exporters:
   prometheus:
     endpoint: 0.0.0.0:8889
@@ -28,6 +36,12 @@ exporters:
   debug:
     verbosity: basic
 
+  # Loki native OTLP ingestion (the dedicated loki exporter was removed from
+  # opentelemetry-collector-contrib). Log record attributes land as Loki
+  # structured metadata; service.name becomes the service_name index label.
+  otlp_http/loki:
+    endpoint: http://loki:3100/otlp
+
 service:
   pipelines:
     metrics:
@@ -36,5 +50,5 @@ service:
       exporters: [prometheus, debug]
     logs:
       receivers: [otlp]
-      processors: [batch]
-      exporters: [debug]
+      processors: [batch, resource/defaults]
+      exporters: [otlp_http/loki, debug]

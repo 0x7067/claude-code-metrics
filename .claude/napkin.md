@@ -1,20 +1,28 @@
-# Napkin
+# Napkin - Working Notes
 
-## Corrections
-| Date | Source | What Went Wrong | What To Do Instead |
-|------|--------|----------------|-------------------|
-| 2026-02-12 | self | Tried a large multi-hunk `apply_patch` on a big JSON file and it failed to match | Break large JSON edits into smaller, focused patches |
-| 2026-02-12 | self | Added a comment and left a trailing comma in JSON, breaking parsing | Never add comments in JSON and re-check commas after removing blocks |
+## Grafana Dashboard Learnings
 
-## User Preferences
-- (accumulate here as you learn them)
+### calculateField transformation
+- Only supports **binary operations** (two operands at a time)
+- For expressions like `A / (B + C)`, chain two steps:
+  1. `B + C = D` (intermediate result)
+  2. `A / D` (final result)
 
-## Patterns That Work
-- For Grafana table panels in `claude-code.json`, using `merge` -> `organize` -> `calculateField` -> `organize` gives stable column naming/order and makes derived metrics (like acceptance rate) straightforward.
+### Dashboard links
+- `type: "dashboards"` does **tag-based search** and ignores the `url` field
+- Use `type: "link"` for direct URL navigation
 
-## Patterns That Don't Work
-- (approaches that failed and why)
+### Template variables
+- Set `"refresh": 2` (on time range change) so variables pick up new label values
 
-## Domain Notes
-- (project/domain context that matters)
-- Loki labels in this stack are assigned at promtail ingestion time; changing label extraction does not backfill historical streams, so panel fixes may only appear on newly ingested logs.
+## OpenTelemetry / Prometheus
+
+### Metric naming conventions (OTel -> Prometheus)
+- Dots become underscores (`session.duration` -> `session_duration`)
+- Unit suffix is appended automatically (`_seconds`, `_bytes`, etc.)
+- Counters get `_total` suffix
+
+## Repo-Specific Notes
+
+- Dashboard JSON files are large (3800+ lines). Use offset/limit when reading.
+- Heredocs in bash don't work in sandboxed mode (can't create temp files). Use inline strings instead.

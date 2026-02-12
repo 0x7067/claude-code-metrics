@@ -652,7 +652,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(max_over_time(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) / (sum(max_over_time(claude_code_active_time_seconds_total{project=~\"$project\"}[$__range])) / 3600)",
+          "expr": "sum(max_over_time(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) / clamp_min(sum(max_over_time(claude_code_active_time_seconds_total{project=~\"$project\"}[$__range])) / 3600, 0.001)",
           "instant": true,
           "refId": "A"
         }
@@ -3371,118 +3371,6 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "decimals": 0,
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Accepted"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "green",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Rejected"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "red",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 12,
-        "x": 0,
-        "y": 54
-      },
-      "id": 9,
-      "options": {
-        "displayMode": "gradient",
-        "maxVizHeight": 300,
-        "minVizHeight": 16,
-        "minVizWidth": 8,
-        "namePlacement": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showUnfilled": true,
-        "sizing": "auto",
-        "text": {
-          "titleSize": 14,
-          "valueSize": 24
-        },
-        "valueMode": "color"
-      },
-      "pluginVersion": "12.3.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "expr": "sum(increase(claude_code_code_edit_tool_decision_total{decision=\"accept\",project=~\"$project\"}[$__range])) or vector(0)",
-          "legendFormat": "Accepted",
-          "instant": true,
-          "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "expr": "sum(increase(claude_code_code_edit_tool_decision_total{decision=\"reject\",project=~\"$project\"}[$__range])) or vector(0)",
-          "legendFormat": "Rejected",
-          "instant": true,
-          "refId": "B"
-        }
-      ],
-      "title": "Tool Decisions",
-      "description": "Total tool decisions by outcome in the selected time range",
-      "type": "bargauge"
-    },
-    {
-      "datasource": {
         "type": "loki",
         "uid": "loki"
       },
@@ -3506,12 +3394,12 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
+        "h": 8,
         "w": 12,
-        "x": 12,
+        "x": 0,
         "y": 54
       },
-      "id": 19,
+      "id": 400,
       "options": {
         "displayMode": "gradient",
         "maxVizHeight": 300,
@@ -3541,19 +3429,19 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum by (tool_name) (label_replace(count_over_time({job=\"claude-transcripts\",hook_name=~\"PreToolUse:.+\"}[$__auto]), \"tool_name\", \"$1\", \"hook_name\", \"PreToolUse:(.+)\"))",
+          "expr": "sum by (tool_name) (count_over_time({service_name=\"claude-code\"} | event_name=\"tool_result\" [$__auto]))",
           "legendFormat": "{{tool_name}}",
           "refId": "A"
         }
       ],
-      "title": "Tool Call Frequency",
-      "description": "Tool usage frequency based on parsed tool_name labels",
+      "title": "Tool Usage Frequency",
+      "description": "Top tools by execution count from OTel tool_result events",
       "type": "bargauge"
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
+        "type": "loki",
+        "uid": "loki"
       },
       "fieldConfig": {
         "defaults": {
@@ -3572,15 +3460,46 @@
           },
           "unit": "short"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Successful"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Failed"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
-        "h": 6,
+        "h": 8,
         "w": 12,
-        "x": 0,
-        "y": 60
+        "x": 12,
+        "y": 54
       },
-      "id": 21,
+      "id": 401,
       "options": {
         "displayMode": "gradient",
         "maxVizHeight": 300,
@@ -3590,7 +3509,116 @@
         "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
-            "lastNotNull"
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "text": {
+          "titleSize": 14,
+          "valueSize": 24
+        },
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "sum(count_over_time({service_name=\"claude-code\"} | event_name=\"tool_result\" | success=\"true\" [$__auto]))",
+          "legendFormat": "Successful",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "sum(count_over_time({service_name=\"claude-code\"} | event_name=\"tool_result\" | success=\"false\" [$__auto]))",
+          "legendFormat": "Failed",
+          "refId": "B"
+        }
+      ],
+      "title": "Tool Success / Failure",
+      "description": "Overall tool execution outcomes from OTel tool_result events",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "loki"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*accepted"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*rejected"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 62
+      },
+      "id": 402,
+      "options": {
+        "displayMode": "gradient",
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
           ],
           "fields": "",
           "values": false
@@ -3607,17 +3635,155 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
+            "type": "loki",
+            "uid": "loki"
           },
-          "expr": "sum by (tool) (increase(claude_code_code_edit_tool_decision_total{project=~\"$project\"}[$__range]))",
-          "instant": true,
-          "legendFormat": "{{tool}}",
+          "expr": "sum by (tool_name) (count_over_time({service_name=\"claude-code\"} | event_name=\"tool_decision\" | decision=\"accept\" [$__auto]))",
+          "legendFormat": "{{tool_name}} accepted",
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "sum by (tool_name) (count_over_time({service_name=\"claude-code\"} | event_name=\"tool_decision\" | decision=\"reject\" [$__auto]))",
+          "legendFormat": "{{tool_name}} rejected",
+          "refId": "B"
         }
       ],
       "title": "Tool Decisions by Tool",
-      "description": "Total tool decisions by tool in the selected time range",
+      "description": "Accept and reject counts per tool from OTel tool_decision events",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "loki"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 62
+      },
+      "id": 403,
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "values": [
+            "value",
+            "percent"
+          ]
+        },
+        "pieType": "donut",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "sum by (source) (count_over_time({service_name=\"claude-code\"} | event_name=\"tool_decision\" [$__auto]))",
+          "legendFormat": "{{source}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Decision Sources",
+      "description": "How tool permission decisions are made (config, user_permanent, user_temporary, user_abort, user_reject)",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "loki"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "ms",
+          "decimals": 0
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 70
+      },
+      "id": 404,
+      "options": {
+        "displayMode": "gradient",
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "text": {
+          "titleSize": 14,
+          "valueSize": 18
+        },
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "avg_over_time({service_name=\"claude-code\"} | event_name=\"tool_result\" | unwrap duration_ms [$__auto]) by (tool_name)",
+          "legendFormat": "{{tool_name}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Avg Tool Duration",
+      "description": "Average tool execution time in ms from OTel tool_result events",
       "type": "bargauge"
     },
     {
@@ -3747,12 +3913,12 @@
         ]
       },
       "gridPos": {
-        "h": 6,
+        "h": 8,
         "w": 12,
         "x": 12,
-        "y": 60
+        "y": 70
       },
-      "id": 22,
+      "id": 405,
       "options": {
         "cellHeight": "sm",
         "footer": {
@@ -3837,6 +4003,24 @@
               "Value #B": "Accepted",
               "Value #C": "Rejected"
             }
+          }
+        },
+        {
+          "id": "filterByValue",
+          "options": {
+            "type": "include",
+            "filters": [
+              {
+                "fieldName": "Total Decisions",
+                "config": {
+                  "id": "greater",
+                  "options": {
+                    "value": 0
+                  }
+                }
+              }
+            ],
+            "match": "all"
           }
         },
         {
