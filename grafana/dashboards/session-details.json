@@ -946,7 +946,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "{job=\"claude-transcripts\",session_id=\"$session_id\"}",
+          "expr": "{service_name=\"claude-code\"} | session_id=\"$session_id\"",
           "refId": "A"
         }
       ],
@@ -1149,7 +1149,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "{job=\"claude-transcripts\",session_id=\"$session_id\",msg_type=\"assistant\"} |= \"type\\\":\\\"tool_use\" | regexp `\"name\":\"(?P<tool_name>[^\"]+)\"` | regexp `\"file_path\":\"(?P<file_path>[^\"]*)\"` | regexp `\"command\":\"(?P<command>[^\"]*)\"` | regexp `\"pattern\":\"(?P<pattern>[^\"]*)\"` | line_format \"{\\\"tool_name\\\": \\\"{{.tool_name}}\\\", \\\"file_path\\\": \\\"{{.file_path}}\\\", \\\"command\\\": \\\"{{.command}}\\\", \\\"pattern\\\": \\\"{{.pattern}}\\\"}\"",
+          "expr": "{service_name=\"claude-code\"} | session_id=\"$session_id\" | event_name=\"tool_result\" | line_format \"{\\\"tool_name\\\": \\\"{{.tool_name}}\\\", \\\"duration_ms\\\": \\\"{{.duration_ms}}\\\", \\\"success\\\": \\\"{{.success}}\\\"}\"",
           "refId": "A"
         }
       ],
@@ -1170,9 +1170,8 @@
               "id": 0,
               "Time": 1,
               "tool_name": 2,
-              "file_path": 3,
-              "command": 4,
-              "pattern": 5
+              "duration_ms": 3,
+              "success": 4
             },
             "renameByName": {}
           }
