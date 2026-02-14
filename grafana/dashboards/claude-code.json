@@ -483,7 +483,7 @@
           "fields": "",
           "values": false
         },
-        "showThresholdLabels": false,
+        "showThresholdLabels": true,
         "showThresholdMarkers": true,
         "sizing": "auto",
         "text": {
@@ -498,13 +498,13 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(max_over_time(claude_code_token_usage_tokens_total{type=\"cacheRead\",project=~\"$project\",model=~\"$model\"}[$__range])) / clamp_min((sum(max_over_time(claude_code_token_usage_tokens_total{type=\"cacheRead\",project=~\"$project\",model=~\"$model\"}[$__range])) + sum(max_over_time(claude_code_token_usage_tokens_total{type=\"input\",project=~\"$project\",model=~\"$model\"}[$__range]))), 1) * 100",
+          "expr": "sum(increase(claude_code_token_usage_tokens_total{type=\"cacheRead\",project=~\"$project\",model=~\"$model\"}[$__range])) / clamp_min((sum(increase(claude_code_token_usage_tokens_total{type=\"cacheRead\",project=~\"$project\",model=~\"$model\"}[$__range])) + sum(increase(claude_code_token_usage_tokens_total{type=\"input\",project=~\"$project\",model=~\"$model\"}[$__range]))), 1) * 100",
           "instant": true,
           "refId": "A"
         }
       ],
       "title": "Cache Hit %",
-      "description": "Cache read tokens divided by (cache read + input tokens)",
+      "description": "Cache read tokens divided by (cache read + input tokens) in the selected range",
       "type": "gauge"
     },
     {
@@ -2417,7 +2417,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum by (model) (max_over_time(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range]))",
+          "expr": "sum by (model) (increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range]))",
           "format": "table",
           "instant": true,
           "refId": "A"
@@ -2437,7 +2437,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum by (model) (max_over_time(claude_code_token_usage_tokens_total{type=\"input\",project=~\"$project\",model=~\"$model\"}[$__range]))",
+          "expr": "sum by (model) (increase(claude_code_token_usage_tokens_total{type=\"input\",project=~\"$project\",model=~\"$model\"}[$__range]))",
           "format": "table",
           "instant": true,
           "refId": "C"
@@ -2447,7 +2447,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum by (model) (max_over_time(claude_code_token_usage_tokens_total{type=\"output\",project=~\"$project\",model=~\"$model\"}[$__range]))",
+          "expr": "sum by (model) (increase(claude_code_token_usage_tokens_total{type=\"output\",project=~\"$project\",model=~\"$model\"}[$__range]))",
           "format": "table",
           "instant": true,
           "refId": "D"
@@ -2457,7 +2457,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum by (model) (max_over_time(claude_code_token_usage_tokens_total{type=\"cacheRead\",project=~\"$project\",model=~\"$model\"}[$__range]))",
+          "expr": "sum by (model) (increase(claude_code_token_usage_tokens_total{type=\"cacheRead\",project=~\"$project\",model=~\"$model\"}[$__range]))",
           "format": "table",
           "instant": true,
           "refId": "E"
@@ -2467,7 +2467,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum by (model) (max_over_time(claude_code_token_usage_tokens_total{type=\"cacheCreation\",project=~\"$project\",model=~\"$model\"}[$__range]))",
+          "expr": "sum by (model) (increase(claude_code_token_usage_tokens_total{type=\"cacheCreation\",project=~\"$project\",model=~\"$model\"}[$__range]))",
           "format": "table",
           "instant": true,
           "refId": "F"
@@ -4119,7 +4119,7 @@
         }
       ],
       "title": "Most Used Commands",
-      "description": "Top CLI programs by execution count, extracted from Bash tool events.",
+      "description": "Top CLI programs by execution count, extracted from Bash tool events. Requires OTEL_LOG_TOOL_DETAILS=1 to capture tool_parameters.",
       "type": "bargauge"
     },
     {

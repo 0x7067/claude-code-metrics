@@ -307,7 +307,7 @@
           "fields": "",
           "values": false
         },
-        "showThresholdLabels": false,
+        "showThresholdLabels": true,
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
@@ -660,7 +660,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "max(max_over_time(claude_code_cost_usage_USD_total{session_id=\"$session_id\"}[$__range]))",
+          "expr": "max(claude_code_cost_usage_USD_total{session_id=\"$session_id\"})",
           "legendFormat": "Cumulative Cost",
           "refId": "A"
         }
@@ -1180,7 +1180,7 @@
       "type": "table"
     }
   ],
-  "refresh": "",
+  "refresh": "30s",
   "schemaVersion": 42,
   "tags": [
     "claude-code",
@@ -1201,6 +1201,7 @@
         "definition": "label_values(claude_code_session_count_total, session_id)",
         "hide": 0,
         "includeAll": false,
+        "description": "Select a session to view its details. If empty, pick one from the dropdown.",
         "label": "Session ID",
         "multi": false,
         "name": "session_id",
