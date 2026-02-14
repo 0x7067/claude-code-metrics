@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(tree ~/.letta/agents/agent-3d0abcb7-cf2c-48cd-907c-cbcd520c0d90/memory/system/ 2>/dev/null || find ~/.letta/agents/agent-3d0abcb7-cf2c-48cd-907c-cbcd520c0d90/memory/system/ -type f -o -type d | head -20)",
+      "Bash(git shortlog:*)",
+      "Write(**)",
+      "Bash(find:*)",
+      "Bash(tree ~/.letta/agents/agent-3d0abcb7-cf2c-48cd-907c-cbcd520c0d90/memory/system 2>/dev/null || find ~/.letta/agents/agent-3d0abcb7-cf2c-48cd-907c-cbcd520c0d90/memory/system -type f -o -type d | sort)",
+      "Bash(git add:*)"
+    ]
+  }
+}

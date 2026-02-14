@@ -1,0 +1,17 @@
+{
+  "lastAgent": "agent-3d0abcb7-cf2c-48cd-907c-cbcd520c0d90",
+  "sessionsByServer": {
+    "api.letta.com": {
+      "agentId": "agent-3d0abcb7-cf2c-48cd-907c-cbcd520c0d90",
+      "conversationId": "default"
+    }
+  },
+  "lastSession": {
+    "agentId": "agent-3d0abcb7-cf2c-48cd-907c-cbcd520c0d90",
+    "conversationId": "default"
+  },
+  "memoryReminderInterval": 5,
+  "reflectionTrigger": "step-count",
+  "reflectionBehavior": "reminder",
+  "reflectionStepCount": 5
+}
