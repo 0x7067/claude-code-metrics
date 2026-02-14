@@ -122,7 +122,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "max(claude_code_cost_usage_USD_total{session_id=\"$session_id\"})",
+          "expr": "max(max_over_time(claude_code_cost_usage_USD_total{session_id=\"$session_id\"}[$__range]))",
           "instant": true,
           "refId": "A"
         }
@@ -185,7 +185,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(max(claude_code_token_usage_tokens_total{session_id=\"$session_id\"}) by (type))",
+          "expr": "sum(max by (type) (max_over_time(claude_code_token_usage_tokens_total{session_id=\"$session_id\"}[$__range])))",
           "instant": true,
           "refId": "A"
         }
@@ -247,7 +247,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "max(claude_code_active_time_seconds_total{session_id=\"$session_id\"})",
+          "expr": "max(max_over_time(claude_code_active_time_seconds_total{session_id=\"$session_id\"}[$__range]))",
           "instant": true,
           "refId": "A"
         }
@@ -660,7 +660,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "max(claude_code_cost_usage_USD_total{session_id=\"$session_id\"})",
+          "expr": "max(max_over_time(claude_code_cost_usage_USD_total{session_id=\"$session_id\"}[$__range]))",
           "legendFormat": "Cumulative Cost",
           "refId": "A"
         }
@@ -760,7 +760,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "max(claude_code_lines_of_code_count_total{session_id=\"$session_id\",type=\"added\"}) or vector(0)",
+          "expr": "max(max_over_time(claude_code_lines_of_code_count_total{session_id=\"$session_id\",type=\"added\"}[$__range])) or vector(0)",
           "legendFormat": "Added",
           "instant": true,
           "refId": "A"
@@ -770,7 +770,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "max(claude_code_lines_of_code_count_total{session_id=\"$session_id\",type=\"removed\"}) or vector(0)",
+          "expr": "max(max_over_time(claude_code_lines_of_code_count_total{session_id=\"$session_id\",type=\"removed\"}[$__range])) or vector(0)",
           "legendFormat": "Removed",
           "instant": true,
           "refId": "B"
@@ -884,7 +884,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "max(claude_code_commit_count_total{session_id=\"$session_id\"}) or vector(0)",
+          "expr": "max(max_over_time(claude_code_commit_count_total{session_id=\"$session_id\"}[$__range])) or vector(0)",
           "legendFormat": "Commits",
           "instant": true,
           "refId": "A"
@@ -894,7 +894,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "max(claude_code_pull_request_count_total{session_id=\"$session_id\"}) or vector(0)",
+          "expr": "max(max_over_time(claude_code_pull_request_count_total{session_id=\"$session_id\"}[$__range])) or vector(0)",
           "legendFormat": "Pull Requests",
           "instant": true,
           "refId": "B"
@@ -1206,7 +1206,7 @@
         "name": "session_id",
         "options": [],
         "query": "label_values(claude_code_session_count_total, session_id)",
-        "refresh": 1,
+        "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
         "sort": 1,

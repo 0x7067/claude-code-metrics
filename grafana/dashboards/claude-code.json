@@ -1592,15 +1592,16 @@
               "user_email": true,
               "user_id": true,
               "Value #F": true,
-              "project": true
+              "project": false
             },
             "indexByName": {
               "Value #E": 0,
               "Value #A": 1,
-              "session_id": 2,
-              "Value #B": 3,
-              "Value #C": 4,
-              "Value #D": 5
+              "project": 2,
+              "session_id": 3,
+              "Value #B": 4,
+              "Value #C": 5,
+              "Value #D": 6
             },
             "renameByName": {
               "Value #A": "Last Active",
@@ -3429,7 +3430,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum by (tool_name) (count_over_time({service_name=\"claude-code\"} | event_name=\"tool_result\" [$__auto]))",
+          "expr": "sum by (tool_name) (count_over_time({service_name=\"claude-code\", project=~\"$project\"} | event_name=\"tool_result\" [$__auto]))",
           "legendFormat": "{{tool_name}}",
           "refId": "A"
         }
@@ -3529,7 +3530,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum(count_over_time({service_name=\"claude-code\"} | event_name=\"tool_result\" | success=\"true\" [$__auto]))",
+          "expr": "sum(count_over_time({service_name=\"claude-code\", project=~\"$project\"} | event_name=\"tool_result\" | success=\"true\" [$__auto]))",
           "legendFormat": "Successful",
           "refId": "A"
         },
@@ -3538,7 +3539,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum(count_over_time({service_name=\"claude-code\"} | event_name=\"tool_result\" | success=\"false\" [$__auto]))",
+          "expr": "sum(count_over_time({service_name=\"claude-code\", project=~\"$project\"} | event_name=\"tool_result\" | success=\"false\" [$__auto]))",
           "legendFormat": "Failed",
           "refId": "B"
         }
@@ -3638,7 +3639,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum by (tool_name) (count_over_time({service_name=\"claude-code\"} | event_name=\"tool_decision\" | decision=\"accept\" [$__auto]))",
+          "expr": "sum by (tool_name) (count_over_time({service_name=\"claude-code\", project=~\"$project\"} | event_name=\"tool_decision\" | decision=\"accept\" [$__auto]))",
           "legendFormat": "{{tool_name}} accepted",
           "refId": "A"
         },
@@ -3647,7 +3648,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum by (tool_name) (count_over_time({service_name=\"claude-code\"} | event_name=\"tool_decision\" | decision=\"reject\" [$__auto]))",
+          "expr": "sum by (tool_name) (count_over_time({service_name=\"claude-code\", project=~\"$project\"} | event_name=\"tool_decision\" | decision=\"reject\" [$__auto]))",
           "legendFormat": "{{tool_name}} rejected",
           "refId": "B"
         }
@@ -3707,7 +3708,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum by (source) (count_over_time({service_name=\"claude-code\"} | event_name=\"tool_decision\" [$__auto]))",
+          "expr": "sum by (source) (count_over_time({service_name=\"claude-code\", project=~\"$project\"} | event_name=\"tool_decision\" [$__auto]))",
           "legendFormat": "{{source}}",
           "refId": "A"
         }
@@ -3777,7 +3778,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "avg_over_time({service_name=\"claude-code\"} | event_name=\"tool_result\" | unwrap duration_ms [$__auto]) by (tool_name)",
+          "expr": "avg_over_time({service_name=\"claude-code\", project=~\"$project\"} | event_name=\"tool_result\" | unwrap duration_ms [$__auto]) by (tool_name)",
           "legendFormat": "{{tool_name}}",
           "refId": "A"
         }
@@ -4112,7 +4113,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum by (program) (count_over_time(\n  {service_name=\"claude-code\"}\n  | event_name=\"tool_result\"\n  | tool_name=\"Bash\"\n  | line_format \"{{.tool_parameters}}\"\n  | json bash_command=\"bash_command\"\n  | line_format \"{{.bash_command}}\"\n  | regexp `(?P<program>^\\S+)`\n  [$__auto]\n))",
+          "expr": "sum by (program) (count_over_time(\n  {service_name=\"claude-code\", project=~\"$project\"}\n  | event_name=\"tool_result\"\n  | tool_name=\"Bash\"\n  | line_format \"{{.tool_parameters}}\"\n  | json bash_command=\"bash_command\"\n  | line_format \"{{.bash_command}}\"\n  | regexp `(?P<program>^\\S+)`\n  [$__auto]\n))",
           "legendFormat": "{{program}}",
           "refId": "A"
         }
@@ -4181,7 +4182,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum by (skill_name) (count_over_time(\n  {service_name=\"claude-code\"}\n  | event_name=\"tool_result\"\n  | tool_name=\"Skill\"\n  | line_format \"{{.tool_parameters}}\"\n  | json skill_name=\"skill_name\"\n  | skill_name != \"\"\n  [$__auto]\n))",
+          "expr": "sum by (skill_name) (count_over_time(\n  {service_name=\"claude-code\", project=~\"$project\"}\n  | event_name=\"tool_result\"\n  | tool_name=\"Skill\"\n  | line_format \"{{.tool_parameters}}\"\n  | json skill_name=\"skill_name\"\n  | skill_name != \"\"\n  [$__auto]\n))",
           "legendFormat": "{{skill_name}}",
           "refId": "A"
         }
