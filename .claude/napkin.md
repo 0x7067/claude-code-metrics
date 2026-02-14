@@ -26,3 +26,4 @@
 
 - Dashboard JSON files are large (3800+ lines). Use offset/limit when reading.
 - Heredocs in bash don't work in sandboxed mode (can't create temp files). Use inline strings instead.
+- Running long `python3 -c` one-liners can fail with `unmatched "` errors; for multi-line scripts, use an escalated heredoc.
