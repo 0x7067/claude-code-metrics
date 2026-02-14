@@ -3,6 +3,7 @@ set -euo pipefail
 
 PROJECTS_DIR="/claude-projects"
 OUTPUT_DIR="/transcripts"
+BACKUP_DIR="/sessions-backup"
 INTERVAL="${TRANSCRIPT_INTERVAL:-120}"
 
 mkdir -p "$OUTPUT_DIR"
@@ -35,7 +36,83 @@ except Exception:
 PY
 }
 
+has_messages() {
+  local session_file="$1"
+  python3 - "$session_file" <<'PY'
+import json, sys
+with open(sys.argv[1]) as f:
+    for line in f:
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            data = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        msg = data.get("message", {})
+        if isinstance(msg, dict) and msg.get("role") in ("user", "assistant"):
+            sys.exit(0)
+sys.exit(1)
+PY
+}
+
+cleanup_empty() {
+  python3 - "$OUTPUT_DIR" <<'PY'
+import os, sys, shutil
+from html.parser import HTMLParser
+
+class MsgCounter(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.count = 0
+    def handle_starttag(self, tag, attrs):
+        for _, val in attrs:
+            if val and "message" in val.split():
+                self.count += 1
+
+output_dir = sys.argv[1]
+removed = 0
+for entry in os.listdir(output_dir):
+    if entry == "all":
+        continue
+    d = os.path.join(output_dir, entry)
+    idx = os.path.join(d, "index.html")
+    if not os.path.isfile(idx):
+        continue
+    # Check subagents first
+    sa_dir = os.path.join(d, "subagents")
+    if os.path.isdir(sa_dir):
+        for sa in os.listdir(sa_dir):
+            sa_idx = os.path.join(sa_dir, sa, "index.html")
+            if not os.path.isfile(sa_idx):
+                continue
+            p = MsgCounter()
+            with open(sa_idx) as f:
+                p.feed(f.read())
+            if p.count == 0:
+                shutil.rmtree(os.path.join(sa_dir, sa))
+                removed += 1
+    # Check main transcript
+    p = MsgCounter()
+    with open(idx) as f:
+        p.feed(f.read())
+    if p.count == 0:
+        shutil.rmtree(d)
+        removed += 1
+
+if removed:
+    print(f"  Cleaned up {removed} empty transcript(s)")
+PY
+}
+
 generate() {
+  # Back up JSONL session files to persistent volume
+  if [ -d "$PROJECTS_DIR" ] && [ "$(ls -A "$PROJECTS_DIR" 2>/dev/null)" ]; then
+    rsync -a "$PROJECTS_DIR/" "$BACKUP_DIR/"
+  fi
+
+  cleanup_empty
+
   echo "[$(date -Iseconds)] Generating transcripts..."
   local processed=0
   local skipped=0
@@ -47,6 +124,11 @@ generate() {
 
     if [ -z "$session_id" ]; then
       echo "  Skipping (sessionId not found): $session_file" >&2
+      skipped=$((skipped + 1))
+      continue
+    fi
+
+    if ! has_messages "$session_file"; then
       skipped=$((skipped + 1))
       continue
     fi
@@ -72,7 +154,7 @@ generate() {
       continue
     fi
     processed=$((processed + 1))
-  done < <(find "$PROJECTS_DIR" -name "*.jsonl" -type f)
+  done < <(find "$PROJECTS_DIR" "$BACKUP_DIR" -name "*.jsonl" -type f)
 
   # Generate the combined index using 'all' command
   if ! claude-code-transcripts all -s "$PROJECTS_DIR" -o "$OUTPUT_DIR/all" -q; then

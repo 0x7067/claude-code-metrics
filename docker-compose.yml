@@ -22,6 +22,7 @@ services:
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=90d"
       - "--web.enable-lifecycle"
     ports:
       - "9090:9090"
@@ -80,6 +81,7 @@ services:
     volumes:
       - ${HOME}/.claude/projects:/claude-projects:ro
       - transcript_data:/transcripts
+      - sessions_data:/sessions-backup
     ports:
       - "8080:8080"
     restart: unless-stopped
@@ -90,3 +92,4 @@ volumes:
   loki_data:
   transcript_data:
   promtail_data:
+  sessions_data:

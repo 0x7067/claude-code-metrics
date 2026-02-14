@@ -1,5 +1,6 @@
 FROM python:3.12-slim
 
+RUN apt-get update && apt-get install -y --no-install-recommends rsync && rm -rf /var/lib/apt/lists/*
 RUN pip install --no-cache-dir claude-code-transcripts beautifulsoup4
 
 COPY generate-transcripts.sh /usr/local/bin/generate-transcripts.sh
@@ -8,7 +9,7 @@ RUN chmod +x /usr/local/bin/generate-transcripts.sh
 COPY serve-transcripts.py /usr/local/bin/serve-transcripts.py
 COPY merge-transcript.py /usr/local/bin/merge_transcript.py
 
-VOLUME ["/claude-projects", "/transcripts"]
+VOLUME ["/claude-projects", "/transcripts", "/sessions-backup"]
 
 EXPOSE 8080
 
