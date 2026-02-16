@@ -1267,7 +1267,7 @@
             {
               "targetBlank": false,
               "title": "View Session Details",
-              "url": "/d/claude-code-session-details?var-session_id=${__data.fields[\"session_id\"]}"
+              "url": "/d/claude-code-session-details?var-session_id=${__data.fields[\"session_id\"]}&from=${__from}&to=${__to}"
             },
             {
               "targetBlank": true,
