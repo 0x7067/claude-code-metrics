@@ -985,7 +985,7 @@
       "type": "stat"
     },
     {
-      "collapsed": false,
+      "collapsed": true,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -993,49 +993,50 @@
         "y": 7
       },
       "id": 105,
-      "panels": [],
-      "title": "Sessions",
-      "type": "row"
-    },
-    {
-      "description": "Visual timeline of session activity from Loki event logs. Each bar represents a session's active period, colored by event density per time bucket.",
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 24,
-        "x": 0,
-        "y": 8
-      },
-      "id": 107,
-      "options": {
-        "alignValue": "left",
-        "legend": {
-          "displayMode": "hidden"
-        },
-        "mergeValues": true,
-        "rowHeight": 0.8,
-        "showValue": "auto",
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
+      "panels": [
         {
-          "datasource": {
-            "type": "loki",
-            "uid": "loki"
+          "description": "Top 10 most active sessions. Each bar shows when a session was active, colored by event density per time bucket.",
+          "fieldConfig": {
+            "defaults": {},
+            "overrides": []
           },
-          "expr": "sum by (session_id) (count_over_time(\n  {service_name=\"claude-code\", project=~\"$project\"}\n  | session_id =~ \".+\"\n  [$__auto]\n))",
-          "legendFormat": "{{session_id}}",
-          "refId": "A"
+          "gridPos": {
+            "h": 10,
+            "w": 24,
+            "x": 0,
+            "y": 8
+          },
+          "id": 107,
+          "options": {
+            "alignValue": "left",
+            "legend": {
+              "displayMode": "hidden"
+            },
+            "mergeValues": true,
+            "rowHeight": 0.6,
+            "showValue": "never",
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "loki"
+              },
+              "expr": "topk(10, sum by (session_id) (count_over_time(\n  {service_name=\"claude-code\", project=~\"$project\"}\n  | session_id =~ \".+\"\n  | label_format session_id=`{{ regexReplaceAll \"^(.{8}).*\" .session_id \"$1\" }}`\n  [$__auto]\n)))",
+              "legendFormat": "{{session_id}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Session Timeline",
+          "type": "state-timeline"
         }
       ],
-      "title": "Session Timeline",
-      "type": "state-timeline"
+      "title": "Sessions",
+      "type": "row"
     },
     {
       "datasource": {
@@ -1259,7 +1260,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 13
+        "y": 8
       },
       "id": 106,
       "options": {
