@@ -998,44 +998,9 @@
       "type": "row"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
-      },
-      "description": "Visual timeline of sessions with cost intensity as color. Each bar represents a session's active period.",
+      "description": "Visual timeline of session activity from Loki event logs. Each bar represents a session's active period, colored by event density per time bucket.",
       "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "fillOpacity": 80,
-            "lineWidth": 0
-          },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 2
-              },
-              {
-                "color": "orange",
-                "value": 10
-              },
-              {
-                "color": "red",
-                "value": 25
-              }
-            ]
-          },
-          "unit": "currencyUSD",
-          "decimals": 2
-        },
+        "defaults": {},
         "overrides": []
       },
       "gridPos": {
@@ -1050,7 +1015,7 @@
         "legend": {
           "displayMode": "hidden"
         },
-        "mergeValues": false,
+        "mergeValues": true,
         "rowHeight": 0.8,
         "showValue": "auto",
         "tooltip": {
@@ -1061,13 +1026,11 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
+            "type": "loki",
+            "uid": "loki"
           },
-          "expr": "max by (session_id) (claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"})",
-          "instant": false,
+          "expr": "sum by (session_id) (count_over_time(\n  {service_name=\"claude-code\", project=~\"$project\"}\n  | session_id =~ \".+\"\n  [$__auto]\n))",
           "legendFormat": "{{session_id}}",
-          "range": true,
           "refId": "A"
         }
       ],
@@ -3101,7 +3064,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum by (program) (count_over_time(\n  {service_name=\"claude-code\", project=~\"$project\"}\n  | event_name=\"tool_result\"\n  | tool_name=\"Bash\"\n  | line_format \"{{.tool_parameters}}\"\n  | json bash_command=\"bash_command\"\n  | line_format \"{{.bash_command}}\"\n  | regexp `(?P<program>^\\S+)`\n  [$__auto]\n))",
+          "expr": "sum by (program) (count_over_time(\n  {service_name=\"claude-code\", project=~\"$project\"}\n  | event_name=\"tool_result\"\n  | tool_name=\"Bash\"\n  | line_format \"{{.tool_parameters}}\"\n  | json bash_command=\"bash_command\"\n  | label_format program=`{{ regexReplaceAll \"\\\\s.*\" .bash_command \"\" }}`\n  | program =~ \".+\"\n  [$__auto]\n))",
           "legendFormat": "{{program}}",
           "refId": "A"
         }
