@@ -63,11 +63,13 @@
             "steps": [
               {
                 "color": "blue",
-                "value": 0
+                "value": null
               }
             ]
           },
-          "unit": "short"
+          "unit": "short",
+          "noValue": "0",
+          "decimals": 0
         },
         "overrides": []
       },
@@ -131,12 +133,25 @@
             "steps": [
               {
                 "color": "green",
-                "value": 0
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 100
+              },
+              {
+                "color": "orange",
+                "value": 500
+              },
+              {
+                "color": "red",
+                "value": 1000
               }
             ]
           },
           "decimals": 2,
-          "unit": "currencyUSD"
+          "unit": "currencyUSD",
+          "noValue": "$0"
         },
         "overrides": []
       },
@@ -200,11 +215,13 @@
             "steps": [
               {
                 "color": "purple",
-                "value": 0
+                "value": null
               }
             ]
           },
-          "unit": "short"
+          "unit": "short",
+          "noValue": "0",
+          "decimals": 0
         },
         "overrides": []
       },
@@ -267,12 +284,13 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "orange",
-                "value": 0
+                "color": "blue",
+                "value": null
               }
             ]
           },
-          "unit": "dtdurations"
+          "unit": "dtdurations",
+          "noValue": "0"
         },
         "overrides": []
       },
@@ -336,12 +354,13 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": 0
+                "color": "blue",
+                "value": null
               }
             ]
           },
-          "unit": "short"
+          "unit": "short",
+          "noValue": "0"
         },
         "overrides": [
           {
@@ -447,20 +466,21 @@
             "steps": [
               {
                 "color": "green",
-                "value": 0
+                "value": null
               },
               {
                 "color": "yellow",
-                "value": 0.5
+                "value": 10
               },
               {
                 "color": "red",
-                "value": 1
+                "value": 25
               }
             ]
           },
-          "decimals": 4,
-          "unit": "currencyUSD"
+          "decimals": 2,
+          "unit": "currencyUSD",
+          "noValue": "$0"
         },
         "overrides": []
       },
@@ -524,20 +544,21 @@
             "steps": [
               {
                 "color": "green",
-                "value": 0
+                "value": null
               },
               {
                 "color": "yellow",
-                "value": 5
+                "value": 25
               },
               {
                 "color": "red",
-                "value": 10
+                "value": 50
               }
             ]
           },
           "decimals": 2,
-          "unit": "currencyUSD"
+          "unit": "currencyUSD",
+          "noValue": "$0"
         },
         "overrides": []
       },
@@ -576,7 +597,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(max_over_time(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) / clamp_min(sum(max_over_time(claude_code_active_time_seconds_total{project=~\"$project\"}[$__range])) / 3600, 0.001)",
+          "expr": "sum(max_over_time(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) / clamp_min(sum(max_over_time(claude_code_active_time_seconds_total{project=~\"$project\"}[$__range])) / 3600, 0.1)",
           "instant": true,
           "refId": "A"
         }
@@ -691,7 +712,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "((sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) / clamp_min((sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0)), 0.01) * 100 >= 0",
+          "expr": "((sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) / clamp_min((sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0)), 0.1) * 100 >= 0",
           "legendFormat": "\u2191",
           "instant": true,
           "refId": "A"
@@ -701,7 +722,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "-(((sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) / clamp_min((sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0)), 0.01) * 100) > 0",
+          "expr": "-(((sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) / clamp_min((sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0)), 0.1) * 100) > 0",
           "legendFormat": "\u2193",
           "instant": true,
           "refId": "B"
@@ -817,7 +838,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "((sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) / clamp_min((sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0)), 0.01) * 100 >= 0",
+          "expr": "((sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) / clamp_min((sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0)), 0.1) * 100 >= 0",
           "legendFormat": "\u2191",
           "instant": true,
           "refId": "A"
@@ -827,7 +848,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "-(((sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) / clamp_min((sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0)), 0.01) * 100) > 0",
+          "expr": "-(((sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) / clamp_min((sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0)), 0.1) * 100) > 0",
           "legendFormat": "\u2193",
           "instant": true,
           "refId": "B"
@@ -1000,19 +1021,20 @@
               },
               {
                 "color": "yellow",
-                "value": 0.5
-              },
-              {
-                "color": "orange",
                 "value": 2
               },
               {
+                "color": "orange",
+                "value": 10
+              },
+              {
                 "color": "red",
-                "value": 5
+                "value": 25
               }
             ]
           },
-          "unit": "currencyUSD"
+          "unit": "currencyUSD",
+          "decimals": 2
         },
         "overrides": []
       },
@@ -1487,7 +1509,7 @@
               "mode": "none"
             },
             "thresholdsStyle": {
-              "mode": "off"
+              "mode": "line"
             }
           },
           "mappings": [],
@@ -1495,12 +1517,17 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": 0
+                "color": "transparent",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
               }
             ]
           },
-          "unit": "currencyUSD"
+          "unit": "currencyUSD",
+          "decimals": 2
         },
         "overrides": []
       },
@@ -1583,7 +1610,7 @@
               "mode": "none"
             },
             "thresholdsStyle": {
-              "mode": "off"
+              "mode": "line"
             }
           },
           "mappings": [],
@@ -1592,11 +1619,20 @@
             "steps": [
               {
                 "color": "green",
-                "value": 0
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 5
+              },
+              {
+                "color": "red",
+                "value": 10
               }
             ]
           },
-          "unit": "currencyUSD"
+          "unit": "currencyUSD",
+          "decimals": 2
         },
         "overrides": []
       },
@@ -2184,25 +2220,25 @@
             "steps": [
               {
                 "color": "green",
-                "value": 0
+                "value": null
               },
               {
                 "color": "yellow",
-                "value": 1
-              },
-              {
-                "color": "orange",
                 "value": 5
               },
               {
+                "color": "orange",
+                "value": 20
+              },
+              {
                 "color": "red",
-                "value": 10
+                "value": 50
               }
             ]
           },
           "decimals": 2,
           "unit": "currencyUSD",
-          "noValue": "N/A"
+          "noValue": "$0"
         },
         "overrides": []
       },
@@ -2660,7 +2696,8 @@
               }
             ]
           },
-          "unit": "short"
+          "unit": "short",
+          "noValue": "0"
         },
         "overrides": [
           {
@@ -3180,7 +3217,8 @@
                 ]
               },
               "decimals": 2,
-              "unit": "currencyUSD"
+              "unit": "currencyUSD",
+              "noValue": "$0"
             },
             "overrides": []
           },
@@ -3256,7 +3294,8 @@
                 ]
               },
               "decimals": 2,
-              "unit": "currencyUSD"
+              "unit": "currencyUSD",
+              "noValue": "$0"
             },
             "overrides": []
           },
@@ -3324,7 +3363,8 @@
                 ]
               },
               "decimals": 0,
-              "unit": "locale"
+              "unit": "locale",
+              "noValue": "0"
             },
             "overrides": []
           },
@@ -3392,7 +3432,8 @@
                 ]
               },
               "decimals": 0,
-              "unit": "locale"
+              "unit": "locale",
+              "noValue": "0"
             },
             "overrides": []
           },
@@ -3460,7 +3501,8 @@
                 ]
               },
               "decimals": 0,
-              "unit": "short"
+              "unit": "short",
+              "noValue": "0"
             },
             "overrides": []
           },
@@ -3528,7 +3570,8 @@
                 ]
               },
               "decimals": 0,
-              "unit": "short"
+              "unit": "short",
+              "noValue": "0"
             },
             "overrides": []
           },
