@@ -7,6 +7,11 @@ receivers:
         endpoint: 0.0.0.0:4318
 
 processors:
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 512
+    spike_limit_mib: 128
+
   batch:
     timeout: 10s
     send_batch_size: 1024
@@ -33,9 +38,6 @@ exporters:
     # All dashboard queries use max_over_time[$__range] so historical data is preserved.
     metric_expiration: 5m
 
-  debug:
-    verbosity: basic
-
   # Loki native OTLP ingestion (the dedicated loki exporter was removed from
   # opentelemetry-collector-contrib). Log record attributes land as Loki
   # structured metadata; service.name becomes the service_name index label.
@@ -51,9 +53,9 @@ service:
   pipelines:
     metrics:
       receivers: [otlp]
-      processors: [batch, deltatocumulative]
-      exporters: [prometheus, debug]
+      processors: [memory_limiter, batch, deltatocumulative]
+      exporters: [prometheus]
     logs:
       receivers: [otlp]
-      processors: [batch, resource/defaults]
-      exporters: [otlp_http/loki, debug]
+      processors: [memory_limiter, batch, resource/defaults]
+      exporters: [otlp_http/loki]

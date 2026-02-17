@@ -681,6 +681,84 @@
               },
               {
                 "color": "yellow",
+                "value": 0.05
+              },
+              {
+                "color": "red",
+                "value": 0.2
+              }
+            ]
+          },
+          "decimals": 3,
+          "unit": "currencyUSD"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 18,
+        "y": 1
+      },
+      "id": 600,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 12,
+          "valueSize": 24
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "sum(max_over_time(claude_code_cost_usage_USD_total{project=~\"$project\"}[$__range])) / clamp_min(sum(max_over_time(claude_code_lines_of_code_count_total{project=~\"$project\"}[$__range])), 1)",
+          "legendFormat": "",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Cost/LOC",
+      "description": "Average cost per line of code changed (added + removed). Lower is more efficient.",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "yellow",
                 "value": 0.5
               },
               {
@@ -749,7 +827,19 @@
             "mode": "fixed",
             "fixedColor": "text"
           },
-          "mappings": [],
+          "mappings": [
+            {
+              "type": "range",
+              "options": {
+                "from": 999,
+                "to": null,
+                "result": {
+                  "text": "New",
+                  "color": "text"
+                }
+              }
+            }
+          ],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -761,7 +851,8 @@
           },
           "decimals": 1,
           "unit": "percent",
-          "noValue": "N/A"
+          "noValue": "N/A",
+          "max": 999
         },
         "overrides": [
           {
@@ -831,7 +922,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "((sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) / clamp_min((sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0)), 0.001) * 100 >= 0",
+          "expr": "((sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) / clamp_min((sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0)), 0.01) * 100 >= 0",
           "legendFormat": "\u2191",
           "instant": true,
           "refId": "A"
@@ -841,7 +932,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "-(((sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) / clamp_min((sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0)), 0.001) * 100) > 0",
+          "expr": "-(((sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) / clamp_min((sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0)), 0.01) * 100) > 0",
           "legendFormat": "\u2193",
           "instant": true,
           "refId": "B"
@@ -939,7 +1030,19 @@
             "mode": "fixed",
             "fixedColor": "text"
           },
-          "mappings": [],
+          "mappings": [
+            {
+              "type": "range",
+              "options": {
+                "from": 999,
+                "to": null,
+                "result": {
+                  "text": "New",
+                  "color": "text"
+                }
+              }
+            }
+          ],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -951,7 +1054,8 @@
           },
           "decimals": 1,
           "unit": "percent",
-          "noValue": "N/A"
+          "noValue": "N/A",
+          "max": 999
         },
         "overrides": [
           {
@@ -1021,7 +1125,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "((sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) / clamp_min((sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0)), 0.001) * 100 >= 0",
+          "expr": "((sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) / clamp_min((sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0)), 0.01) * 100 >= 0",
           "legendFormat": "\u2191",
           "instant": true,
           "refId": "A"
@@ -1031,7 +1135,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "-(((sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) / clamp_min((sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0)), 0.001) * 100) > 0",
+          "expr": "-(((sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) / clamp_min((sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0)), 0.01) * 100) > 0",
           "legendFormat": "\u2193",
           "instant": true,
           "refId": "B"
@@ -1121,7 +1225,19 @@
             "mode": "fixed",
             "fixedColor": "text"
           },
-          "mappings": [],
+          "mappings": [
+            {
+              "type": "range",
+              "options": {
+                "from": 999,
+                "to": null,
+                "result": {
+                  "text": "New",
+                  "color": "text"
+                }
+              }
+            }
+          ],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1133,7 +1249,8 @@
           },
           "decimals": 1,
           "unit": "percent",
-          "noValue": "N/A"
+          "noValue": "N/A",
+          "max": 999
         },
         "overrides": [
           {
@@ -4266,6 +4383,363 @@
       "title": "Most Used Skills",
       "description": "Top skills by execution count. Requires OTEL_LOG_TOOL_DETAILS=1 to capture skill names.",
       "type": "bargauge"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 67
+      },
+      "id": 610,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "vis": false
+                },
+                "lineWidth": 1,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "decimals": 2,
+              "unit": "currencyUSD"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 0,
+            "y": 68
+          },
+          "id": 611,
+          "options": {
+            "barRadius": 0.1,
+            "barWidth": 0.7,
+            "fullHighlight": false,
+            "groupWidth": 0.7,
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom"
+            },
+            "orientation": "horizontal",
+            "showValue": "always",
+            "stacking": "none",
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            },
+            "xTickLabelRotation": 0
+          },
+          "pluginVersion": "12.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "sort_desc(sum by (project) (max_over_time(claude_code_cost_usage_USD_total[$__range])))",
+              "legendFormat": "{{project}}",
+              "instant": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Cost by Project",
+          "type": "barchart"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "vis": false
+                },
+                "lineWidth": 1,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "decimals": 0,
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 8,
+            "y": 68
+          },
+          "id": 612,
+          "options": {
+            "barRadius": 0.1,
+            "barWidth": 0.7,
+            "fullHighlight": false,
+            "groupWidth": 0.7,
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom"
+            },
+            "orientation": "horizontal",
+            "showValue": "always",
+            "stacking": "none",
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            },
+            "xTickLabelRotation": 0
+          },
+          "pluginVersion": "12.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "sort_desc(count by (project) (sum by (session_id, project) (max_over_time(claude_code_session_count_total[$__range])) > 0))",
+              "legendFormat": "{{project}}",
+              "instant": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Sessions by Project",
+          "type": "barchart"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "inspect": false
+              },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              },
+              "decimals": 2
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Cost"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "currencyUSD"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Tokens"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "locale"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Sessions"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "short"
+                  },
+                  {
+                    "id": "decimals",
+                    "value": 0
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "LOC"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "locale"
+                  },
+                  {
+                    "id": "decimals",
+                    "value": 0
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 16,
+            "y": 68
+          },
+          "id": 613,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": true
+            },
+            "showHeader": true,
+            "sortBy": [
+              {
+                "desc": true,
+                "displayName": "Cost"
+              }
+            ]
+          },
+          "pluginVersion": "12.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "sum by (project) (max_over_time(claude_code_cost_usage_USD_total[$__range]))",
+              "legendFormat": "",
+              "instant": true,
+              "format": "table",
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "sum by (project) (max_over_time(claude_code_token_usage_tokens_total[$__range]))",
+              "legendFormat": "",
+              "instant": true,
+              "format": "table",
+              "refId": "B"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "count by (project) (sum by (session_id, project) (max_over_time(claude_code_session_count_total[$__range])) > 0)",
+              "legendFormat": "",
+              "instant": true,
+              "format": "table",
+              "refId": "C"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "sum by (project) (max_over_time(claude_code_lines_of_code_count_total[$__range]))",
+              "legendFormat": "",
+              "instant": true,
+              "format": "table",
+              "refId": "D"
+            }
+          ],
+          "transformations": [
+            {
+              "id": "merge",
+              "options": {}
+            },
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true,
+                  "Time 1": true,
+                  "Time 2": true,
+                  "Time 3": true,
+                  "Time 4": true
+                },
+                "renameByName": {
+                  "project": "Project",
+                  "Value #A": "Cost",
+                  "Value #B": "Tokens",
+                  "Value #C": "Sessions",
+                  "Value #D": "LOC"
+                }
+              }
+            }
+          ],
+          "title": "Project Summary",
+          "type": "table"
+        }
+      ],
+      "title": "Project Analytics",
+      "type": "row"
     },
     {
       "collapsed": true,

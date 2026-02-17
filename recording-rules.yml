@@ -1,0 +1,18 @@
+groups:
+  - name: claude_code_aggregates
+    interval: 60s
+    rules:
+      - record: claude_code:cost_by_project:increase5m
+        expr: sum by (project) (increase(claude_code_cost_usage_USD_total[5m]))
+
+      - record: claude_code:tokens_by_project_model:increase5m
+        expr: sum by (project, model) (increase(claude_code_token_usage_tokens_total[5m]))
+
+      - record: claude_code:active_sessions
+        expr: count(sum by (session_id) (rate(claude_code_cost_usage_USD_total[5m]) > 0)) or vector(0)
+
+      - record: claude_code:cost_by_project:total
+        expr: sum by (project) (max by (session_id, project) (claude_code_cost_usage_USD_total))
+
+      - record: claude_code:tokens_by_model:total
+        expr: sum by (model) (max by (session_id, model) (claude_code_token_usage_tokens_total))
