@@ -51,6 +51,8 @@ services:
       - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER:?set in .env}
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:?set in .env}
       - GF_USERS_ALLOW_SIGN_UP=false
+      # External URL (must match the host-mapped port for image export)
+      - GF_SERVER_ROOT_URL=http://localhost:3500/
       # Image renderer (remote rendering service)
       - GF_RENDERING_SERVER_URL=http://renderer:8081/render
       - GF_RENDERING_CALLBACK_URL=http://grafana:3000/
