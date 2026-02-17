@@ -12,6 +12,8 @@ services:
     depends_on:
       - loki
     restart: unless-stopped
+    # Note: distroless image — no curl/wget for in-container health checks.
+    # Health is monitored via the Stack Health dashboard panels instead.
 
   prometheus:
     image: prom/prometheus:latest
@@ -29,6 +31,17 @@ services:
     depends_on:
       - otel-collector
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  renderer:
+    image: grafana/grafana-image-renderer:latest
+    container_name: grafana-renderer
+    restart: unless-stopped
 
   grafana:
     image: grafana/grafana:latest
@@ -37,6 +50,16 @@ services:
       - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER:?set in .env}
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:?set in .env}
       - GF_USERS_ALLOW_SIGN_UP=false
+      # Image renderer (remote rendering service)
+      - GF_RENDERING_SERVER_URL=http://renderer:8081/render
+      - GF_RENDERING_CALLBACK_URL=http://grafana:3000/
+      # SMTP for alert email notifications
+      - GF_SMTP_ENABLED=${GF_SMTP_ENABLED:-false}
+      - GF_SMTP_HOST=${GF_SMTP_HOST:-}
+      - GF_SMTP_USER=${GF_SMTP_USER:-}
+      - GF_SMTP_PASSWORD=${GF_SMTP_PASSWORD:-}
+      - GF_SMTP_FROM_ADDRESS=${GF_SMTP_FROM_ADDRESS:-alerts@claude-code-metrics.local}
+      - GF_SMTP_FROM_NAME=${GF_SMTP_FROM_NAME:-Claude Code Metrics}
     volumes:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
@@ -44,9 +67,19 @@ services:
     ports:
       - "3500:3000"
     depends_on:
-      - prometheus
-      - loki
+      prometheus:
+        condition: service_healthy
+      loki:
+        condition: service_started
+      renderer:
+        condition: service_started
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
 
   loki:
     image: grafana/loki:latest
@@ -58,6 +91,8 @@ services:
       - "3100:3100"
     command: -config.file=/etc/loki/local-config.yaml
     restart: unless-stopped
+    # Note: distroless image — no shell or wget/curl for in-container health checks.
+    # Health is monitored via the Stack Health dashboard panels instead.
 
   promtail:
     image: grafana/promtail:latest
@@ -70,6 +105,7 @@ services:
     depends_on:
       - loki
     restart: unless-stopped
+    # Note: distroless image — no shell or wget/curl for in-container health checks.
 
   transcript-server:
     build:
@@ -85,6 +121,12 @@ services:
     ports:
       - "8080:8080"
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "python3 -c \"import urllib.request; urllib.request.urlopen('http://localhost:8080/')\""]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
 
 volumes:
   prometheus_data:

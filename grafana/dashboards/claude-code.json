@@ -1241,6 +1241,82 @@
         "type": "prometheus",
         "uid": "prometheus"
       },
+      "description": "Visual timeline of sessions with cost intensity as color. Each bar represents a session's active period.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "fillOpacity": 80,
+            "lineWidth": 0
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 0.5
+              },
+              {
+                "color": "orange",
+                "value": 2
+              },
+              {
+                "color": "red",
+                "value": 5
+              }
+            ]
+          },
+          "unit": "currencyUSD"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 24,
+        "x": 0,
+        "y": 10
+      },
+      "id": 107,
+      "options": {
+        "alignValue": "left",
+        "legend": {
+          "displayMode": "hidden"
+        },
+        "mergeValues": false,
+        "rowHeight": 0.8,
+        "showValue": "auto",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "max by (session_id) (claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"})",
+          "instant": false,
+          "legendFormat": "{{session_id}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Session Timeline",
+      "type": "state-timeline"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1458,7 +1534,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 10
+        "y": 15
       },
       "id": 106,
       "options": {
@@ -1623,7 +1699,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 18
+        "y": 23
       },
       "id": 101,
       "panels": [],
@@ -1692,7 +1768,7 @@
         "h": 8,
         "w": 7,
         "x": 0,
-        "y": 19
+        "y": 24
       },
       "id": 6,
       "options": {
@@ -1797,7 +1873,7 @@
         "h": 8,
         "w": 6,
         "x": 7,
-        "y": 19
+        "y": 24
       },
       "id": 20,
       "options": {
@@ -1893,7 +1969,7 @@
         "h": 8,
         "w": 6,
         "x": 13,
-        "y": 19
+        "y": 24
       },
       "id": 15,
       "options": {
@@ -1999,7 +2075,7 @@
         "h": 8,
         "w": 5,
         "x": 19,
-        "y": 19
+        "y": 24
       },
       "id": 14,
       "options": {
@@ -2048,7 +2124,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 27
+        "y": 32
       },
       "id": 300,
       "panels": [],
@@ -2130,7 +2206,7 @@
         "h": 8,
         "w": 8,
         "x": 0,
-        "y": 28
+        "y": 33
       },
       "id": 301,
       "options": {
@@ -2382,7 +2458,7 @@
         "h": 8,
         "w": 16,
         "x": 8,
-        "y": 28
+        "y": 33
       },
       "id": 302,
       "options": {
@@ -2566,7 +2642,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 36
+        "y": 41
       },
       "id": 102,
       "panels": [],
@@ -2635,7 +2711,7 @@
         "h": 8,
         "w": 6,
         "x": 0,
-        "y": 37
+        "y": 42
       },
       "id": 5,
       "options": {
@@ -2802,7 +2878,7 @@
         "h": 8,
         "w": 6,
         "x": 6,
-        "y": 37
+        "y": 42
       },
       "id": 10,
       "options": {
@@ -2942,7 +3018,7 @@
         "h": 8,
         "w": 6,
         "x": 12,
-        "y": 37
+        "y": 42
       },
       "id": 16,
       "options": {
@@ -3064,7 +3140,7 @@
         "h": 8,
         "w": 6,
         "x": 18,
-        "y": 37
+        "y": 42
       },
       "id": 23,
       "options": {
@@ -3105,7 +3181,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 45
+        "y": 50
       },
       "id": 103,
       "panels": [],
@@ -3205,7 +3281,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 46
+        "y": 51
       },
       "id": 7,
       "options": {
@@ -3306,7 +3382,7 @@
         "h": 7,
         "w": 12,
         "x": 12,
-        "y": 46
+        "y": 51
       },
       "id": 8,
       "options": {
@@ -3363,7 +3439,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 53
+        "y": 58
       },
       "id": 104,
       "panels": [],
@@ -3398,7 +3474,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 54
+        "y": 59
       },
       "id": 400,
       "options": {
@@ -3498,7 +3574,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 54
+        "y": 59
       },
       "id": 401,
       "options": {
@@ -3607,7 +3683,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 62
+        "y": 67
       },
       "id": 402,
       "options": {
@@ -3676,7 +3752,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 62
+        "y": 67
       },
       "id": 403,
       "options": {
@@ -3746,7 +3822,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 70
+        "y": 75
       },
       "id": 404,
       "options": {
@@ -3917,7 +3993,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 70
+        "y": 75
       },
       "id": 405,
       "options": {
@@ -4081,7 +4157,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 78
+        "y": 83
       },
       "id": 406,
       "options": {
@@ -4150,7 +4226,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 78
+        "y": 83
       },
       "id": 407,
       "options": {
@@ -4190,6 +4266,354 @@
       "title": "Most Used Skills",
       "description": "Top skills by execution count. Requires OTEL_LOG_TOOL_DETAILS=1 to capture skill names.",
       "type": "bargauge"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 91
+      },
+      "id": 500,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 50000
+                  },
+                  {
+                    "color": "red",
+                    "value": 100000
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 6,
+            "x": 0,
+            "y": 92
+          },
+          "id": 501,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "auto"
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "prometheus_tsdb_head_series",
+              "instant": true,
+              "legendFormat": "Active Series",
+              "refId": "A"
+            }
+          ],
+          "title": "Prometheus Active Series",
+          "description": "Number of active time series in Prometheus. High cardinality (>100k) may slow queries.",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 5368709120
+                  },
+                  {
+                    "color": "red",
+                    "value": 10737418240
+                  }
+                ]
+              },
+              "unit": "decbytes"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 6,
+            "x": 6,
+            "y": 92
+          },
+          "id": 502,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "auto"
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "prometheus_tsdb_size_bytes",
+              "instant": true,
+              "legendFormat": "TSDB Size",
+              "refId": "A"
+            }
+          ],
+          "title": "Prometheus Storage Size",
+          "description": "Total disk usage of the Prometheus TSDB.",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "lineWidth": 1,
+                "pointSize": 5,
+                "showPoints": "never",
+                "stacking": {
+                  "mode": "none"
+                }
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 12,
+            "x": 12,
+            "y": 92
+          },
+          "id": 503,
+          "options": {
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom"
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "desc"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "rate(otelcol_receiver_accepted_metric_points_total{job=\"otel-collector\"}[$__rate_interval])",
+              "legendFormat": "Accepted",
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "rate(otelcol_receiver_refused_metric_points_total{job=\"otel-collector\"}[$__rate_interval])",
+              "legendFormat": "Refused",
+              "refId": "B"
+            }
+          ],
+          "title": "OTEL Collector Ingestion Rate",
+          "description": "Metric points per second accepted/refused by the OTEL Collector.",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "lineWidth": 1,
+                "pointSize": 5,
+                "showPoints": "never",
+                "stacking": {
+                  "mode": "none"
+                }
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 12,
+            "x": 0,
+            "y": 96
+          },
+          "id": 504,
+          "options": {
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom"
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "desc"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "rate(otelcol_exporter_sent_metric_points_total{job=\"otel-collector\"}[$__rate_interval])",
+              "legendFormat": "Sent ({{exporter}})",
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "rate(otelcol_exporter_send_failed_metric_points_total{job=\"otel-collector\"}[$__rate_interval])",
+              "legendFormat": "Failed ({{exporter}})",
+              "refId": "B"
+            }
+          ],
+          "title": "OTEL Collector Export Rate",
+          "description": "Metric points per second exported to Prometheus and Loki, including failures.",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "lineWidth": 1,
+                "pointSize": 5,
+                "showPoints": "never",
+                "stacking": {
+                  "mode": "none"
+                }
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 12,
+            "x": 12,
+            "y": 96
+          },
+          "id": 505,
+          "options": {
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom"
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "desc"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "rate(prometheus_tsdb_compaction_duration_seconds_sum{job=\"prometheus\"}[$__rate_interval])",
+              "legendFormat": "Compaction Rate",
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "rate(prometheus_rule_evaluation_failures_total{job=\"prometheus\"}[$__rate_interval])",
+              "legendFormat": "Rule Eval Failures",
+              "refId": "B"
+            }
+          ],
+          "title": "Prometheus Health",
+          "description": "Compaction rate and rule evaluation failures.",
+          "type": "timeseries"
+        }
+      ],
+      "title": "Stack Health",
+      "type": "row"
     }
   ],
   "preload": false,
