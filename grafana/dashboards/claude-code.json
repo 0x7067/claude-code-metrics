@@ -1323,7 +1323,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "max by (session_id, project) (max by (session_id, project) (max_over_time(timestamp(claude_code_cost_usage_USD_total{project=~\"$project\"})[$__range:])) or max by (session_id, project) (max_over_time(timestamp(claude_code_token_usage_tokens_total{project=~\"$project\"})[$__range:])) or max by (session_id, project) (max_over_time(timestamp(claude_code_active_time_seconds_total{project=~\"$project\"})[$__range:]))) * 1000",
+          "expr": "max by (session_id, project) (max_over_time(claude_code:session_last_seen:timestamp{project=~\"$project\"}[$__range])) * 1000",
           "format": "table",
           "instant": true,
           "refId": "A"
@@ -1333,7 +1333,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "max by (session_id, project) (max by (session_id, project) (max_over_time(timestamp(claude_code_cost_usage_USD_total{project=~\"$project\"})[$__range:])) or max by (session_id, project) (max_over_time(timestamp(claude_code_token_usage_tokens_total{project=~\"$project\"})[$__range:])) or max by (session_id, project) (max_over_time(timestamp(claude_code_active_time_seconds_total{project=~\"$project\"})[$__range:]))) > bool (time() - 300)",
+          "expr": "max by (session_id, project) (max_over_time(claude_code:session_last_seen:timestamp{project=~\"$project\"}[$__range])) > bool (time() - 300)",
           "format": "table",
           "instant": true,
           "refId": "E"
@@ -1343,7 +1343,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "max by (session_id, project) ((max by (session_id, project) (max_over_time(claude_code_cost_usage_USD_total{project=~\"$project\"}[$__range])) > 0) or (max by (session_id, project) (max_over_time(claude_code_token_usage_tokens_total{project=~\"$project\"}[$__range])) > 0) or (max by (session_id, project) (max_over_time(claude_code_active_time_seconds_total{project=~\"$project\"}[$__range])) > 0))",
+          "expr": "(max by (session_id, project) (max_over_time(claude_code:session_last_seen:timestamp{project=~\"$project\"}[$__range])) > bool 0)\nor\n(max by (session_id, project) (\n  (max by (session_id, project) (max_over_time(claude_code_cost_usage_USD_total{project=~\"$project\"}[$__range])) > 0)\n  or (max by (session_id, project) (max_over_time(claude_code_token_usage_tokens_total{project=~\"$project\"}[$__range])) > 0)\n  or (max by (session_id, project) (max_over_time(claude_code_active_time_seconds_total{project=~\"$project\"}[$__range])) > 0)\n))",
           "format": "table",
           "instant": true,
           "refId": "F"
@@ -1792,7 +1792,9 @@
                 "value": 0
               }
             ]
-          }
+          },
+          "unit": "currencyUSD",
+          "decimals": 2
         },
         "overrides": [
           {
@@ -2867,7 +2869,6 @@
             "showPoints": "never",
             "spanNulls": true,
             "stacking": {
-              "group": "A",
               "mode": "none"
             },
             "thresholdsStyle": {
@@ -4008,15 +4009,15 @@
                   },
                   {
                     "color": "yellow",
-                    "value": 50000
+                    "value": 5368709120
                   },
                   {
                     "color": "red",
-                    "value": 100000
+                    "value": 10737418240
                   }
                 ]
               },
-              "unit": "short"
+              "unit": "decbytes"
             },
             "overrides": []
           },

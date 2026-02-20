@@ -25,7 +25,7 @@ services:
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--storage.tsdb.path=/prometheus"
-      - "--storage.tsdb.retention.time=90d"
+      - "--storage.tsdb.retention.time=365d"
       - "--web.enable-lifecycle"
     ports:
       - "9090:9090"

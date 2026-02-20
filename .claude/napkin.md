@@ -27,3 +27,11 @@
 - Dashboard JSON files are large (3800+ lines). Use offset/limit when reading.
 - Heredocs in bash don't work in sandboxed mode (can't create temp files). Use inline strings instead.
 - Running long `python3 -c` one-liners can fail with `unmatched "` errors; for multi-line scripts, use an escalated heredoc.
+
+## Grafana Variable Gotcha
+
+- Claude Code ≥2.1.45 no longer emits a `project` resource attribute in OTLP telemetry
+- Without `project` labels on active series, `label_values(metric, project)` returns nothing
+- Grafana's "All" for a variable with no values generates a non-`.*` regex → sessions without `project` label get filtered OUT
+- Fix: add `"allValue": ".*"` to the variable definition in the dashboard JSON → "All" always expands to `.*` regardless of available values
+- All 40+ sessions in the last 24h had NO project label; historical (>24h old stale) sessions do

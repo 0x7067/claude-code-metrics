@@ -16,3 +16,11 @@ groups:
 
       - record: claude_code:tokens_by_model:total
         expr: sum by (model) (max by (session_id, model) (claude_code_token_usage_tokens_total))
+
+      - record: claude_code:session_last_seen:timestamp
+        expr: >-
+          max by (session_id, project) (
+            max by (session_id, project) (timestamp(claude_code_cost_usage_USD_total))
+            or max by (session_id, project) (timestamp(claude_code_token_usage_tokens_total))
+            or max by (session_id, project) (timestamp(claude_code_active_time_seconds_total))
+          )
