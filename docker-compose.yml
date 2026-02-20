@@ -3,6 +3,10 @@ services:
     image: otel/opentelemetry-collector-contrib:latest
     container_name: otel-collector
     command: ["--config=/etc/otel-collector-config.yaml"]
+    environment:
+      - GRAFANA_CLOUD_OTLP_ENDPOINT=${GRAFANA_CLOUD_OTLP_ENDPOINT:-}
+      - GRAFANA_CLOUD_INSTANCE_ID=${GRAFANA_CLOUD_INSTANCE_ID:-}
+      - GRAFANA_CLOUD_API_TOKEN=${GRAFANA_CLOUD_API_TOKEN:-}
     volumes:
       - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml:ro
     ports:
@@ -100,6 +104,10 @@ services:
   promtail:
     image: grafana/promtail:latest
     container_name: promtail
+    environment:
+      - GRAFANA_CLOUD_LOKI_ENDPOINT=${GRAFANA_CLOUD_LOKI_ENDPOINT:-}
+      - GRAFANA_CLOUD_INSTANCE_ID=${GRAFANA_CLOUD_INSTANCE_ID:-}
+      - GRAFANA_CLOUD_API_TOKEN=${GRAFANA_CLOUD_API_TOKEN:-}
     volumes:
       - ./promtail-config.yaml:/etc/promtail/config.yaml:ro
       - ${HOME}/.claude/projects:/claude-projects:ro

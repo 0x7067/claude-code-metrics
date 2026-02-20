@@ -190,7 +190,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(max_over_time(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range]))",
+          "expr": "sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)",
           "instant": true,
           "refId": "A"
         }
@@ -260,7 +260,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(max_over_time(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range]))",
+          "expr": "sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)",
           "instant": true,
           "refId": "A"
         }
@@ -329,7 +329,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(max_over_time(claude_code_active_time_seconds_total{project=~\"$project\"}[$__range]))",
+          "expr": "sum(increase(claude_code_active_time_seconds_total{project=~\"$project\"}[$__range])) or vector(0)",
           "instant": true,
           "refId": "A"
         }
@@ -430,7 +430,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(max_over_time(claude_code_lines_of_code_count_total{type=\"added\",project=~\"$project\"}[$__range])) or vector(0)",
+          "expr": "sum(increase(claude_code_lines_of_code_count_total{type=\"added\",project=~\"$project\"}[$__range])) or vector(0)",
           "legendFormat": "Added",
           "instant": true,
           "refId": "A"
@@ -440,7 +440,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(max_over_time(claude_code_lines_of_code_count_total{type=\"removed\",project=~\"$project\"}[$__range])) or vector(0)",
+          "expr": "sum(increase(claude_code_lines_of_code_count_total{type=\"removed\",project=~\"$project\"}[$__range])) or vector(0)",
           "legendFormat": "Removed",
           "instant": true,
           "refId": "B"
@@ -519,7 +519,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(max_over_time(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) / clamp_min(count(sum by (session_id) (max_over_time(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) > 0), 1)",
+          "expr": "(sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) / clamp_min(count(sum by (session_id) (increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) > 0), 1)",
           "instant": true,
           "refId": "A"
         }
@@ -597,7 +597,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(max_over_time(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) / clamp_min(sum(max_over_time(claude_code_active_time_seconds_total{project=~\"$project\"}[$__range])) / 3600, 0.1)",
+          "expr": "(sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) / clamp_min((sum(increase(claude_code_active_time_seconds_total{project=~\"$project\"}[$__range])) or vector(0)) / 3600, 0.1)",
           "instant": true,
           "refId": "A"
         }
@@ -712,7 +712,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "((sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) / clamp_min((sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0)), 0.1) * 100 >= 0",
+          "expr": "((((sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) / (sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) * 100) and ((sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0)) > 0) and (((sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) >= 0)",
           "legendFormat": "\u2191",
           "instant": true,
           "refId": "A"
@@ -722,7 +722,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "-(((sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) / clamp_min((sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0)), 0.1) * 100) > 0",
+          "expr": "-((((sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) / (sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) * 100) and ((sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0)) > 0) and (((sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) < 0)",
           "legendFormat": "\u2193",
           "instant": true,
           "refId": "B"
@@ -838,7 +838,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "((sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) / clamp_min((sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0)), 0.1) * 100 >= 0",
+          "expr": "((((sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) / (sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) * 100) and ((sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0)) > 0) and (((sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) >= 0)",
           "legendFormat": "\u2191",
           "instant": true,
           "refId": "A"
@@ -848,7 +848,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "-(((sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) / clamp_min((sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0)), 0.1) * 100) > 0",
+          "expr": "-((((sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) / (sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) * 100) and ((sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0)) > 0) and (((sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) < 0)",
           "legendFormat": "\u2193",
           "instant": true,
           "refId": "B"
@@ -964,7 +964,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "((count(sum by (session_id) (max_over_time(claude_code_session_count_total{project=~\"$project\"}[$__range])) > 0) or vector(0)) - (count(sum by (session_id) (max_over_time(claude_code_session_count_total{project=~\"$project\"}[$__range] offset $__range)) > 0) or vector(0))) / clamp_min((count(sum by (session_id) (max_over_time(claude_code_session_count_total{project=~\"$project\"}[$__range] offset $__range)) > 0) or vector(0)), 1) * 100 >= 0",
+          "expr": "((((count(sum by (session_id) (max_over_time(claude_code_session_count_total{project=~\"$project\"}[$__range])) > 0) or vector(0)) - (count(sum by (session_id) (max_over_time(claude_code_session_count_total{project=~\"$project\"}[$__range] offset $__range)) > 0) or vector(0))) / (count(sum by (session_id) (max_over_time(claude_code_session_count_total{project=~\"$project\"}[$__range] offset $__range)) > 0) or vector(0)) * 100) and ((count(sum by (session_id) (max_over_time(claude_code_session_count_total{project=~\"$project\"}[$__range] offset $__range)) > 0) or vector(0)) > 0) and ((count(sum by (session_id) (max_over_time(claude_code_session_count_total{project=~\"$project\"}[$__range])) > 0) or vector(0)) >= (count(sum by (session_id) (max_over_time(claude_code_session_count_total{project=~\"$project\"}[$__range] offset $__range)) > 0) or vector(0))))",
           "legendFormat": "\u2191",
           "instant": true,
           "refId": "A"
@@ -974,7 +974,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "-(((count(sum by (session_id) (max_over_time(claude_code_session_count_total{project=~\"$project\"}[$__range])) > 0) or vector(0)) - (count(sum by (session_id) (max_over_time(claude_code_session_count_total{project=~\"$project\"}[$__range] offset $__range)) > 0) or vector(0))) / clamp_min((count(sum by (session_id) (max_over_time(claude_code_session_count_total{project=~\"$project\"}[$__range] offset $__range)) > 0) or vector(0)), 1) * 100) > 0",
+          "expr": "((0 - (((count(sum by (session_id) (max_over_time(claude_code_session_count_total{project=~\"$project\"}[$__range])) > 0) or vector(0)) - (count(sum by (session_id) (max_over_time(claude_code_session_count_total{project=~\"$project\"}[$__range] offset $__range)) > 0) or vector(0))) / (count(sum by (session_id) (max_over_time(claude_code_session_count_total{project=~\"$project\"}[$__range] offset $__range)) > 0) or vector(0)) * 100)) and ((count(sum by (session_id) (max_over_time(claude_code_session_count_total{project=~\"$project\"}[$__range] offset $__range)) > 0) or vector(0)) > 0) and ((count(sum by (session_id) (max_over_time(claude_code_session_count_total{project=~\"$project\"}[$__range])) > 0) or vector(0)) < (count(sum by (session_id) (max_over_time(claude_code_session_count_total{project=~\"$project\"}[$__range] offset $__range)) > 0) or vector(0))))",
           "legendFormat": "\u2193",
           "instant": true,
           "refId": "B"
@@ -1293,7 +1293,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "max by (session_id, project) (max_over_time(claude_code_cost_usage_USD_total{project=~\"$project\"}[$__range]))",
+          "expr": "sum by (session_id, project) (increase(claude_code_cost_usage_USD_total{project=~\"$project\"}[$__range]))",
           "format": "table",
           "instant": true,
           "refId": "B"
@@ -1303,7 +1303,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum by (session_id, project) (max_over_time(claude_code_token_usage_tokens_total{project=~\"$project\"}[$__range]))",
+          "expr": "sum by (session_id, project) (increase(claude_code_token_usage_tokens_total{project=~\"$project\"}[$__range]))",
           "format": "table",
           "instant": true,
           "refId": "C"
@@ -1313,7 +1313,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "max by (session_id, project) (max_over_time(claude_code_active_time_seconds_total{project=~\"$project\"}[$__range]))",
+          "expr": "sum by (session_id, project) (increase(claude_code_active_time_seconds_total{project=~\"$project\"}[$__range]))",
           "format": "table",
           "instant": true,
           "refId": "D"
@@ -1343,7 +1343,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "(max by (session_id, project) (max_over_time(claude_code:session_last_seen:timestamp{project=~\"$project\"}[$__range])) > bool 0)\nor\n(max by (session_id, project) (\n  (max by (session_id, project) (max_over_time(claude_code_cost_usage_USD_total{project=~\"$project\"}[$__range])) > 0)\n  or (max by (session_id, project) (max_over_time(claude_code_token_usage_tokens_total{project=~\"$project\"}[$__range])) > 0)\n  or (max by (session_id, project) (max_over_time(claude_code_active_time_seconds_total{project=~\"$project\"}[$__range])) > 0)\n))",
+          "expr": "(max by (session_id, project) (max_over_time(claude_code:session_last_seen:timestamp{project=~\"$project\"}[$__range])) > bool 0)\nor\n((sum by (session_id, project) (increase(claude_code_cost_usage_USD_total{project=~\"$project\"}[$__range])) > 0)\n  or (sum by (session_id, project) (increase(claude_code_token_usage_tokens_total{project=~\"$project\"}[$__range])) > 0)\n  or (sum by (session_id, project) (increase(claude_code_active_time_seconds_total{project=~\"$project\"}[$__range])) > 0))",
           "format": "table",
           "instant": true,
           "refId": "F"
@@ -1756,7 +1756,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sort_desc(sum by (model) (max_over_time(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])))",
+          "expr": "sort_desc(sum by (model) (increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])))",
           "legendFormat": "{{model}}",
           "format": "table",
           "instant": true,
@@ -2243,7 +2243,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(max_over_time(claude_code_cost_usage_USD_total{model=~\".*opus.*\",project=~\"$project\"}[$__range])) - (sum(max_over_time(claude_code_token_usage_tokens_total{model=~\".*opus.*\",type=\"input\",project=~\"$project\"}[$__range])) * 3 / 1000000 + sum(max_over_time(claude_code_token_usage_tokens_total{model=~\".*opus.*\",type=\"output\",project=~\"$project\"}[$__range])) * 15 / 1000000 + sum(max_over_time(claude_code_token_usage_tokens_total{model=~\".*opus.*\",type=\"cacheCreation\",project=~\"$project\"}[$__range])) * 3.75 / 1000000 + sum(max_over_time(claude_code_token_usage_tokens_total{model=~\".*opus.*\",type=\"cacheRead\",project=~\"$project\"}[$__range])) * 0.30 / 1000000)",
+          "expr": "(sum(increase(claude_code_cost_usage_USD_total{model=~\".*opus.*\",project=~\"$project\"}[$__range])) or vector(0)) - ((sum(increase(claude_code_token_usage_tokens_total{model=~\".*opus.*\",type=\"input\",project=~\"$project\"}[$__range])) or vector(0)) * 3 / 1000000 + (sum(increase(claude_code_token_usage_tokens_total{model=~\".*opus.*\",type=\"output\",project=~\"$project\"}[$__range])) or vector(0)) * 15 / 1000000 + (sum(increase(claude_code_token_usage_tokens_total{model=~\".*opus.*\",type=\"cacheCreation\",project=~\"$project\"}[$__range])) or vector(0)) * 3.75 / 1000000 + (sum(increase(claude_code_token_usage_tokens_total{model=~\".*opus.*\",type=\"cacheRead\",project=~\"$project\"}[$__range])) or vector(0)) * 0.30 / 1000000)",
           "legendFormat": "",
           "instant": true,
           "refId": "A"
@@ -3702,7 +3702,7 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "sort_desc(sum by (project) (max_over_time(claude_code_cost_usage_USD_total[$__range])))",
+              "expr": "sort_desc(sum by (project) (increase(claude_code_cost_usage_USD_total[$__range])))",
               "legendFormat": "{{project}}",
               "instant": true,
               "refId": "A"
@@ -3908,7 +3908,7 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "sum by (project) (max_over_time(claude_code_cost_usage_USD_total[$__range]))",
+              "expr": "sum by (project) (increase(claude_code_cost_usage_USD_total[$__range]))",
               "legendFormat": "",
               "instant": true,
               "format": "table",
@@ -3919,7 +3919,7 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "sum by (project) (max_over_time(claude_code_token_usage_tokens_total[$__range]))",
+              "expr": "sum by (project) (increase(claude_code_token_usage_tokens_total[$__range]))",
               "legendFormat": "",
               "instant": true,
               "format": "table",
@@ -3941,7 +3941,7 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "sum by (project) (max_over_time(claude_code_lines_of_code_count_total[$__range]))",
+              "expr": "sum by (project) (increase(claude_code_lines_of_code_count_total[$__range]))",
               "legendFormat": "",
               "instant": true,
               "format": "table",
@@ -4360,7 +4360,8 @@
         "refresh": 2,
         "skipUrlSync": false,
         "sort": 1,
-        "type": "query"
+        "type": "query",
+        "allValue": ".*"
       },
       {
         "current": {
@@ -4384,7 +4385,8 @@
         "regex": "",
         "skipUrlSync": false,
         "sort": 1,
-        "type": "query"
+        "type": "query",
+        "allValue": ".*"
       },
       {
         "current": {

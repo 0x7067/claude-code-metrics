@@ -35,3 +35,7 @@
 - Grafana's "All" for a variable with no values generates a non-`.*` regex → sessions without `project` label get filtered OUT
 - Fix: add `"allValue": ".*"` to the variable definition in the dashboard JSON → "All" always expands to `.*` regardless of available values
 - All 40+ sessions in the last 24h had NO project label; historical (>24h old stale) sessions do
+
+## Dashboard Reliability Pass (2026-02-20)
+- When rewriting Grafana JSON with `jq`, use `jq -a` for final write to preserve ASCII-escaped sequences (`\u2191`, `\u2014`) and avoid noisy Unicode diffs.
+- Reliability update in `claude-code.json`: set variable `allValue` to `.*` and replaced selected `max_over_time` totals with range-correct `increase` semantics.

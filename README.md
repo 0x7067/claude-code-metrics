@@ -61,6 +61,47 @@ export OTEL_LOG_TOOL_DETAILS=1
 | OTEL Collector | 4317 | OTLP gRPC endpoint |
 | OTEL Collector | 4318 | OTLP HTTP endpoint |
 
+## Grafana Cloud (optional dual-write)
+
+The stack can export telemetry to Grafana Cloud **in addition to** the local stack. When the env vars below are unset, the exporters are registered but effectively disabled (empty endpoint).
+
+### Credentials
+
+1. In [Grafana Cloud Portal](https://grafana.com/auth/sign-in), open your stack.
+2. Go to **Security → Access Policies** and create a new access policy with these scopes:
+   - `metrics:write` — push OTEL metrics
+   - `logs:write` — push OTEL logs and Loki transcript logs
+   - `traces:write` — (optional, for future trace support)
+3. Generate a token for the policy — this is your `GRAFANA_CLOUD_API_TOKEN`.
+4. Find your instance ID and OTLP endpoint under **Connections → OpenTelemetry**.
+5. Find your Loki push URL under **Connections → Data sources → Loki** (the "URL" field).
+
+### Required env vars
+
+Add these to your `.env` file (copy from the example below):
+
+```bash
+# OTEL metrics + logs (via OTEL Collector)
+GRAFANA_CLOUD_OTLP_ENDPOINT=https://otlp-gateway-<region>.grafana.net/otlp
+GRAFANA_CLOUD_INSTANCE_ID=<numeric-instance-id>
+GRAFANA_CLOUD_API_TOKEN=<your-api-token>
+
+# Loki transcript logs (via Promtail) — instance ID and token are reused
+GRAFANA_CLOUD_LOKI_ENDPOINT=https://logs-prod-<region>.grafana.net/loki/api/v1/push
+```
+
+Restart the stack after adding credentials:
+
+```bash
+docker compose up -d --force-recreate otel-collector promtail
+```
+
+### Dashboards
+
+Import the dashboard JSON from `grafana/dashboards/claude-code.json` into your Grafana Cloud instance via **Dashboards → Import**.
+
+> **Note:** Recording rules defined in `recording-rules.yml` must be recreated manually in Grafana Cloud under **Alerting → Alert rules** (Mimir recording rules). Panels that rely on recording rules will show no data until they are created.
+
 ## Stop
 
 ```bash
