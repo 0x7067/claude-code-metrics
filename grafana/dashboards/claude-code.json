@@ -50,7 +50,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${prometheus_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -106,7 +106,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "count(sum by (session_id) (max_over_time(claude_code_session_count_total{project=~\"$project\"}[$__range])) > 0)",
           "instant": true,
@@ -120,7 +120,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${prometheus_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -188,7 +188,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)",
           "instant": true,
@@ -202,7 +202,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${prometheus_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -258,7 +258,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)",
           "instant": true,
@@ -272,7 +272,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${prometheus_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -327,7 +327,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "sum(increase(claude_code_active_time_seconds_total{project=~\"$project\"}[$__range])) or vector(0)",
           "instant": true,
@@ -341,7 +341,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${prometheus_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -428,7 +428,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "sum(increase(claude_code_lines_of_code_count_total{type=\"added\",project=~\"$project\"}[$__range])) or vector(0)",
           "legendFormat": "Added",
@@ -438,7 +438,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "sum(increase(claude_code_lines_of_code_count_total{type=\"removed\",project=~\"$project\"}[$__range])) or vector(0)",
           "legendFormat": "Removed",
@@ -453,7 +453,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${prometheus_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -517,7 +517,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "(sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) / clamp_min(count(sum by (session_id) (increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) > 0), 1)",
           "instant": true,
@@ -531,7 +531,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${prometheus_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -595,7 +595,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "(sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) / clamp_min((sum(increase(claude_code_active_time_seconds_total{project=~\"$project\"}[$__range])) or vector(0)) / 3600, 0.1)",
           "instant": true,
@@ -609,7 +609,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${prometheus_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -710,7 +710,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "((((sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) / (sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) * 100) and ((sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0)) > 0) and (((sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) >= 0)",
           "legendFormat": "\u2191",
@@ -720,7 +720,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "-((((sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) / (sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) * 100) and ((sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0)) > 0) and (((sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) < 0)",
           "legendFormat": "\u2193",
@@ -735,7 +735,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${prometheus_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -836,7 +836,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "((((sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) / (sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) * 100) and ((sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0)) > 0) and (((sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) >= 0)",
           "legendFormat": "\u2191",
@@ -846,7 +846,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "-((((sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) / (sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) * 100) and ((sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0)) > 0) and (((sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range])) or vector(0)) - (sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\",model=~\"$model\"}[$__range] offset $__range)) or vector(0))) < 0)",
           "legendFormat": "\u2193",
@@ -861,7 +861,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${prometheus_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -962,7 +962,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "((((count(sum by (session_id) (max_over_time(claude_code_session_count_total{project=~\"$project\"}[$__range])) > 0) or vector(0)) - (count(sum by (session_id) (max_over_time(claude_code_session_count_total{project=~\"$project\"}[$__range] offset $__range)) > 0) or vector(0))) / (count(sum by (session_id) (max_over_time(claude_code_session_count_total{project=~\"$project\"}[$__range] offset $__range)) > 0) or vector(0)) * 100) and ((count(sum by (session_id) (max_over_time(claude_code_session_count_total{project=~\"$project\"}[$__range] offset $__range)) > 0) or vector(0)) > 0) and ((count(sum by (session_id) (max_over_time(claude_code_session_count_total{project=~\"$project\"}[$__range])) > 0) or vector(0)) >= (count(sum by (session_id) (max_over_time(claude_code_session_count_total{project=~\"$project\"}[$__range] offset $__range)) > 0) or vector(0))))",
           "legendFormat": "\u2191",
@@ -972,7 +972,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "((0 - (((count(sum by (session_id) (max_over_time(claude_code_session_count_total{project=~\"$project\"}[$__range])) > 0) or vector(0)) - (count(sum by (session_id) (max_over_time(claude_code_session_count_total{project=~\"$project\"}[$__range] offset $__range)) > 0) or vector(0))) / (count(sum by (session_id) (max_over_time(claude_code_session_count_total{project=~\"$project\"}[$__range] offset $__range)) > 0) or vector(0)) * 100)) and ((count(sum by (session_id) (max_over_time(claude_code_session_count_total{project=~\"$project\"}[$__range] offset $__range)) > 0) or vector(0)) > 0) and ((count(sum by (session_id) (max_over_time(claude_code_session_count_total{project=~\"$project\"}[$__range])) > 0) or vector(0)) < (count(sum by (session_id) (max_over_time(claude_code_session_count_total{project=~\"$project\"}[$__range] offset $__range)) > 0) or vector(0))))",
           "legendFormat": "\u2193",
@@ -1024,7 +1024,7 @@
             {
               "datasource": {
                 "type": "loki",
-                "uid": "loki"
+                "uid": "${loki_ds}"
               },
               "expr": "topk(10, sum by (session_id) (count_over_time(\n  {service_name=\"claude-code\", project=~\"$project\"}\n  | session_id =~ \".+\"\n  | label_format session_id=`{{ regexReplaceAll \"^(.{8}).*\" .session_id \"$1\" }}`\n  [$__auto]\n)))",
               "legendFormat": "{{session_id}}",
@@ -1041,7 +1041,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${prometheus_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1291,7 +1291,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "sum by (session_id, project) (increase(claude_code_cost_usage_USD_total{project=~\"$project\"}[$__range]))",
           "format": "table",
@@ -1301,7 +1301,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "sum by (session_id, project) (increase(claude_code_token_usage_tokens_total{project=~\"$project\"}[$__range]))",
           "format": "table",
@@ -1311,7 +1311,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "sum by (session_id, project) (increase(claude_code_active_time_seconds_total{project=~\"$project\"}[$__range]))",
           "format": "table",
@@ -1321,7 +1321,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "max by (session_id, project) (max_over_time(claude_code:session_last_seen:timestamp{project=~\"$project\"}[$__range])) * 1000",
           "format": "table",
@@ -1331,7 +1331,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "max by (session_id, project) (max_over_time(claude_code:session_last_seen:timestamp{project=~\"$project\"}[$__range])) > bool (time() - 300)",
           "format": "table",
@@ -1341,7 +1341,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "(max by (session_id, project) (max_over_time(claude_code:session_last_seen:timestamp{project=~\"$project\"}[$__range])) > bool 0)\nor\n((sum by (session_id, project) (increase(claude_code_cost_usage_USD_total{project=~\"$project\"}[$__range])) > 0)\n  or (sum by (session_id, project) (increase(claude_code_token_usage_tokens_total{project=~\"$project\"}[$__range])) > 0)\n  or (sum by (session_id, project) (increase(claude_code_active_time_seconds_total{project=~\"$project\"}[$__range])) > 0))",
           "format": "table",
@@ -1435,7 +1435,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${prometheus_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1522,7 +1522,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__rate_interval]))",
           "legendFormat": "Cost per interval",
@@ -1536,7 +1536,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${prometheus_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1628,7 +1628,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "sum(rate(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__rate_interval])) * 3600",
           "legendFormat": "Spending Rate",
@@ -1654,7 +1654,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${prometheus_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1754,7 +1754,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "sort_desc(sum by (model) (increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])))",
           "legendFormat": "{{model}}",
@@ -1769,7 +1769,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${prometheus_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -2013,7 +2013,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "sum by (model) (increase(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range]))",
           "format": "table",
@@ -2023,7 +2023,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "count by (model) (sum by (session_id, model) (max_over_time(claude_code_cost_usage_USD_total{project=~\"$project\",model=~\"$model\"}[$__range])) > 0)",
           "format": "table",
@@ -2033,7 +2033,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "sum by (model) (increase(claude_code_token_usage_tokens_total{type=\"input\",project=~\"$project\",model=~\"$model\"}[$__range]))",
           "format": "table",
@@ -2043,7 +2043,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "sum by (model) (increase(claude_code_token_usage_tokens_total{type=\"output\",project=~\"$project\",model=~\"$model\"}[$__range]))",
           "format": "table",
@@ -2053,7 +2053,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "sum by (model) (increase(claude_code_token_usage_tokens_total{type=\"cacheRead\",project=~\"$project\",model=~\"$model\"}[$__range]))",
           "format": "table",
@@ -2063,7 +2063,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "sum by (model) (increase(claude_code_token_usage_tokens_total{type=\"cacheCreation\",project=~\"$project\",model=~\"$model\"}[$__range]))",
           "format": "table",
@@ -2161,7 +2161,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${prometheus_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -2241,7 +2241,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "(sum(increase(claude_code_cost_usage_USD_total{model=~\".*opus.*\",project=~\"$project\"}[$__range])) or vector(0)) - ((sum(increase(claude_code_token_usage_tokens_total{model=~\".*opus.*\",type=\"input\",project=~\"$project\"}[$__range])) or vector(0)) * 3 / 1000000 + (sum(increase(claude_code_token_usage_tokens_total{model=~\".*opus.*\",type=\"output\",project=~\"$project\"}[$__range])) or vector(0)) * 15 / 1000000 + (sum(increase(claude_code_token_usage_tokens_total{model=~\".*opus.*\",type=\"cacheCreation\",project=~\"$project\"}[$__range])) or vector(0)) * 3.75 / 1000000 + (sum(increase(claude_code_token_usage_tokens_total{model=~\".*opus.*\",type=\"cacheRead\",project=~\"$project\"}[$__range])) or vector(0)) * 0.30 / 1000000)",
           "legendFormat": "",
@@ -2269,7 +2269,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${prometheus_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -2349,7 +2349,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "sum(increase(claude_code_token_usage_tokens_total{type=\"input\",project=~\"$project\",model=~\"$model\"}[$__rate_interval]))",
           "legendFormat": "Input",
@@ -2358,7 +2358,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "sum(increase(claude_code_token_usage_tokens_total{type=\"output\",project=~\"$project\",model=~\"$model\"}[$__rate_interval]))",
           "legendFormat": "Output",
@@ -2367,7 +2367,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "sum(increase(claude_code_token_usage_tokens_total{type=\"cacheRead\",project=~\"$project\",model=~\"$model\"}[$__rate_interval]))",
           "legendFormat": "Cache Read",
@@ -2376,7 +2376,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "sum(increase(claude_code_token_usage_tokens_total{type=\"cacheCreation\",project=~\"$project\",model=~\"$model\"}[$__rate_interval]))",
           "legendFormat": "Cache Write",
@@ -2390,7 +2390,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${prometheus_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -2483,7 +2483,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "sum(increase(claude_code_token_usage_tokens_total{type=\"cacheRead\",project=~\"$project\",model=~\"$model\"}[$__rate_interval])) / clamp_min(sum(increase(claude_code_token_usage_tokens_total{type=\"cacheRead\",project=~\"$project\",model=~\"$model\"}[$__rate_interval])) + sum(increase(claude_code_token_usage_tokens_total{type=\"input\",project=~\"$project\",model=~\"$model\"}[$__rate_interval])), 1) * 100",
           "legendFormat": "Cache Hit %",
@@ -2510,7 +2510,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${prometheus_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -2621,7 +2621,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "sum(increase(claude_code_lines_of_code_count_total{type=\"added\",project=~\"$project\"}[$__rate_interval]))",
           "legendFormat": "Added",
@@ -2630,7 +2630,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "sum(increase(claude_code_lines_of_code_count_total{type=\"removed\",project=~\"$project\"}[$__rate_interval]))",
           "legendFormat": "Removed",
@@ -2644,7 +2644,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${prometheus_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -2731,7 +2731,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "sum(increase(claude_code_commit_count_total{project=~\"$project\"}[$__range])) or vector(0)",
           "legendFormat": "Commits",
@@ -2741,7 +2741,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "sum(increase(claude_code_pull_request_count_total{project=~\"$project\"}[$__range])) or vector(0)",
           "legendFormat": "Pull Requests",
@@ -2769,7 +2769,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "loki"
+        "uid": "${loki_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -2824,7 +2824,7 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "loki"
+            "uid": "${loki_ds}"
           },
           "expr": "sum by (tool_name) (count_over_time({service_name=\"claude-code\", project=~\"$project\"} | event_name=\"tool_result\" [$__auto]))",
           "legendFormat": "{{tool_name}}",
@@ -2838,7 +2838,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "loki"
+        "uid": "${loki_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -2925,7 +2925,7 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "loki"
+            "uid": "${loki_ds}"
           },
           "expr": "sum by (tool_name) (count_over_time({service_name=\"claude-code\",project=~\"$project\"} | event_name=\"tool_result\" | success=\"true\" [$__auto])) / sum by (tool_name) (count_over_time({service_name=\"claude-code\",project=~\"$project\"} | event_name=\"tool_result\" [$__auto])) * 100",
           "legendFormat": "{{tool_name}}",
@@ -2939,7 +2939,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "loki"
+        "uid": "${loki_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -2995,7 +2995,7 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "loki"
+            "uid": "${loki_ds}"
           },
           "expr": "avg_over_time({service_name=\"claude-code\", project=~\"$project\"} | event_name=\"tool_result\" | unwrap duration_ms [$__auto]) by (tool_name)",
           "legendFormat": "{{tool_name}}",
@@ -3009,7 +3009,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "loki"
+        "uid": "${loki_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -3064,7 +3064,7 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "loki"
+            "uid": "${loki_ds}"
           },
           "expr": "sum by (program) (count_over_time(\n  {service_name=\"claude-code\", project=~\"$project\"}\n  | event_name=\"tool_result\"\n  | tool_name=\"Bash\"\n  | line_format \"{{.tool_parameters}}\"\n  | json bash_command=\"bash_command\"\n  | label_format program=`{{ regexReplaceAll \"\\\\s.*\" .bash_command \"\" }}`\n  | program =~ \".+\"\n  [$__auto]\n))",
           "legendFormat": "{{program}}",
@@ -3078,7 +3078,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "loki"
+        "uid": "${loki_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -3133,7 +3133,7 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "loki"
+            "uid": "${loki_ds}"
           },
           "expr": "sum by (skill_name) (count_over_time(\n  {service_name=\"claude-code\", project=~\"$project\"}\n  | event_name=\"tool_result\"\n  | tool_name=\"Skill\"\n  | line_format \"{{.tool_parameters}}\"\n  | json skill_name=\"skill_name\"\n  | skill_name != \"\"\n  [$__auto]\n))",
           "legendFormat": "{{skill_name}}",
@@ -3157,7 +3157,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "fieldConfig": {
             "defaults": {
@@ -3220,7 +3220,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${prometheus_ds}"
               },
               "expr": "sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\"}[7d]))",
               "legendFormat": "",
@@ -3234,7 +3234,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "fieldConfig": {
             "defaults": {
@@ -3297,7 +3297,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${prometheus_ds}"
               },
               "expr": "sum(increase(claude_code_cost_usage_USD_total{project=~\"$project\"}[30d]))",
               "legendFormat": "",
@@ -3311,7 +3311,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "fieldConfig": {
             "defaults": {
@@ -3366,7 +3366,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${prometheus_ds}"
               },
               "expr": "sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\"}[7d]))",
               "legendFormat": "",
@@ -3380,7 +3380,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "fieldConfig": {
             "defaults": {
@@ -3435,7 +3435,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${prometheus_ds}"
               },
               "expr": "sum(increase(claude_code_token_usage_tokens_total{project=~\"$project\"}[30d]))",
               "legendFormat": "",
@@ -3449,7 +3449,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "fieldConfig": {
             "defaults": {
@@ -3504,7 +3504,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${prometheus_ds}"
               },
               "expr": "count(sum by (session_id) (max_over_time(claude_code_session_count_total{project=~\"$project\"}[7d])) > 0)",
               "legendFormat": "",
@@ -3518,7 +3518,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "fieldConfig": {
             "defaults": {
@@ -3573,7 +3573,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${prometheus_ds}"
               },
               "expr": "count(sum by (session_id) (max_over_time(claude_code_session_count_total{project=~\"$project\"}[30d])) > 0)",
               "legendFormat": "",
@@ -3636,7 +3636,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "fieldConfig": {
             "defaults": {
@@ -3700,7 +3700,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${prometheus_ds}"
               },
               "expr": "sort_desc(sum by (project) (increase(claude_code_cost_usage_USD_total[$__range])))",
               "legendFormat": "{{project}}",
@@ -3714,7 +3714,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "fieldConfig": {
             "defaults": {
@@ -3778,7 +3778,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${prometheus_ds}"
               },
               "expr": "sort_desc(count by (project) (sum by (session_id, project) (max_over_time(claude_code_session_count_total[$__range])) > 0))",
               "legendFormat": "{{project}}",
@@ -3792,7 +3792,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "fieldConfig": {
             "defaults": {
@@ -3906,7 +3906,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${prometheus_ds}"
               },
               "expr": "sum by (project) (increase(claude_code_cost_usage_USD_total[$__range]))",
               "legendFormat": "",
@@ -3917,7 +3917,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${prometheus_ds}"
               },
               "expr": "sum by (project) (increase(claude_code_token_usage_tokens_total[$__range]))",
               "legendFormat": "",
@@ -3928,7 +3928,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${prometheus_ds}"
               },
               "expr": "count by (project) (sum by (session_id, project) (max_over_time(claude_code_session_count_total[$__range])) > 0)",
               "legendFormat": "",
@@ -3939,7 +3939,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${prometheus_ds}"
               },
               "expr": "sum by (project) (increase(claude_code_lines_of_code_count_total[$__range]))",
               "legendFormat": "",
@@ -3993,7 +3993,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "fieldConfig": {
             "defaults": {
@@ -4046,7 +4046,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${prometheus_ds}"
               },
               "expr": "prometheus_tsdb_head_series",
               "instant": true,
@@ -4061,7 +4061,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "fieldConfig": {
             "defaults": {
@@ -4114,7 +4114,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${prometheus_ds}"
               },
               "expr": "prometheus_tsdb_size_bytes",
               "instant": true,
@@ -4129,7 +4129,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "fieldConfig": {
             "defaults": {
@@ -4172,7 +4172,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${prometheus_ds}"
               },
               "expr": "rate(otelcol_receiver_accepted_metric_points_total{job=\"otel-collector\"}[$__rate_interval])",
               "legendFormat": "Accepted",
@@ -4181,7 +4181,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${prometheus_ds}"
               },
               "expr": "rate(otelcol_receiver_refused_metric_points_total{job=\"otel-collector\"}[$__rate_interval])",
               "legendFormat": "Refused",
@@ -4195,7 +4195,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "fieldConfig": {
             "defaults": {
@@ -4238,7 +4238,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${prometheus_ds}"
               },
               "expr": "rate(otelcol_exporter_sent_metric_points_total{job=\"otel-collector\"}[$__rate_interval])",
               "legendFormat": "Sent ({{exporter}})",
@@ -4247,7 +4247,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${prometheus_ds}"
               },
               "expr": "rate(otelcol_exporter_send_failed_metric_points_total{job=\"otel-collector\"}[$__rate_interval])",
               "legendFormat": "Failed ({{exporter}})",
@@ -4261,7 +4261,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "fieldConfig": {
             "defaults": {
@@ -4304,7 +4304,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${prometheus_ds}"
               },
               "expr": "rate(prometheus_tsdb_compaction_duration_seconds_sum{job=\"prometheus\"}[$__rate_interval])",
               "legendFormat": "Compaction Rate",
@@ -4313,7 +4313,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${prometheus_ds}"
               },
               "expr": "rate(prometheus_rule_evaluation_failures_total{job=\"prometheus\"}[$__rate_interval])",
               "legendFormat": "Rule Eval Failures",
@@ -4340,6 +4340,22 @@
   "templating": {
     "list": [
       {
+        "name": "prometheus_ds",
+        "label": "Prometheus",
+        "type": "datasource",
+        "query": "prometheus",
+        "hide": 2,
+        "current": {}
+      },
+      {
+        "name": "loki_ds",
+        "label": "Loki",
+        "type": "datasource",
+        "query": "loki",
+        "hide": 2,
+        "current": {}
+      },
+      {
         "current": {
           "selected": true,
           "text": "All",
@@ -4347,7 +4363,7 @@
         },
         "datasource": {
           "type": "prometheus",
-          "uid": "prometheus"
+          "uid": "${prometheus_ds}"
         },
         "definition": "label_values(claude_code_cost_usage_USD_total, project)",
         "hide": 0,
@@ -4371,7 +4387,7 @@
         },
         "datasource": {
           "type": "prometheus",
-          "uid": "prometheus"
+          "uid": "${prometheus_ds}"
         },
         "definition": "label_values(claude_code_token_usage_tokens_total, model)",
         "hide": 0,

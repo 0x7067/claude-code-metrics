@@ -98,7 +98,7 @@ docker compose up -d --force-recreate otel-collector promtail
 
 ### Dashboards
 
-Import the dashboard JSON from `grafana/dashboards/claude-code.json` into your Grafana Cloud instance via **Dashboards → Import**.
+Import the dashboard JSON from `grafana/dashboards/claude-code.json` into your Grafana Cloud instance via **Dashboards → Import**. Datasources are resolved automatically via template variables — no manual remapping needed.
 
 > **Note:** Recording rules defined in `recording-rules.yml` must be recreated manually in Grafana Cloud under **Alerting → Alert rules** (Mimir recording rules). Panels that rely on recording rules will show no data until they are created.
 
