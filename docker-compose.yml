@@ -8,7 +8,7 @@ services:
       - GRAFANA_CLOUD_INSTANCE_ID=${GRAFANA_CLOUD_INSTANCE_ID:-}
       - GRAFANA_CLOUD_API_TOKEN=${GRAFANA_CLOUD_API_TOKEN:-}
     volumes:
-      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml:ro
+      - ./${OTEL_COLLECTOR_CONFIG:-otel-collector-config.yaml}:/etc/otel-collector-config.yaml:ro
     ports:
       - "4317:4317" # OTLP gRPC
       - "4318:4318" # OTLP HTTP
@@ -109,7 +109,7 @@ services:
       - GRAFANA_CLOUD_INSTANCE_ID=${GRAFANA_CLOUD_INSTANCE_ID:-}
       - GRAFANA_CLOUD_API_TOKEN=${GRAFANA_CLOUD_API_TOKEN:-}
     volumes:
-      - ./promtail-config.yaml:/etc/promtail/config.yaml:ro
+      - ./${PROMTAIL_CONFIG:-promtail-config.yaml}:/etc/promtail/config.yaml:ro
       - ${HOME}/.claude/projects:/claude-projects:ro
       - promtail_data:/var/lib/promtail
     command: -config.file=/etc/promtail/config.yaml

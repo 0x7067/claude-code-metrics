@@ -44,18 +44,29 @@ exporters:
   otlp_http/loki:
     endpoint: http://loki:3100/otlp
 
+  # Grafana Cloud OTLP endpoint — credentials supplied via env vars.
+  # Only active when GRAFANA_CLOUD_OTLP_ENDPOINT is set.
+  otlphttp/grafana_cloud:
+    endpoint: ${GRAFANA_CLOUD_OTLP_ENDPOINT}
+    auth:
+      authenticator: basicauth/grafana_cloud
+
 extensions:
   health_check:
     endpoint: 0.0.0.0:13133
+  basicauth/grafana_cloud:
+    client_auth:
+      username: ${GRAFANA_CLOUD_INSTANCE_ID}
+      password: ${GRAFANA_CLOUD_API_TOKEN}
 
 service:
-  extensions: [health_check]
+  extensions: [health_check, basicauth/grafana_cloud]
   pipelines:
     metrics:
       receivers: [otlp]
       processors: [memory_limiter, batch, deltatocumulative]
-      exporters: [prometheus]
+      exporters: [prometheus, otlphttp/grafana_cloud]
     logs:
       receivers: [otlp]
       processors: [memory_limiter, batch, resource/defaults]
-      exporters: [otlp_http/loki]
+      exporters: [otlp_http/loki, otlphttp/grafana_cloud]

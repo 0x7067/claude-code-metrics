@@ -63,7 +63,7 @@ export OTEL_LOG_TOOL_DETAILS=1
 
 ## Grafana Cloud (optional dual-write)
 
-The stack can export telemetry to Grafana Cloud **in addition to** the local stack. When the env vars below are unset, the exporters are registered but effectively disabled (empty endpoint).
+The stack can export telemetry to Grafana Cloud **in addition to** the local stack. By default the local-only configs are used — the cloud exporters are only loaded when you switch to the cloud config files via env vars.
 
 ### Credentials
 
@@ -76,11 +76,15 @@ The stack can export telemetry to Grafana Cloud **in addition to** the local sta
 4. Find your instance ID and OTLP endpoint under **Connections → OpenTelemetry**.
 5. Find your Loki push URL under **Connections → Data sources → Loki** (the "URL" field).
 
-### Required env vars
+### Enable cloud dual-write
 
-Add these to your `.env` file (copy from the example below):
+Copy `.env.example` to `.env` and uncomment the cloud section:
 
 ```bash
+# Switch to cloud-enabled collector configs
+OTEL_COLLECTOR_CONFIG=otel-collector-config-cloud.yaml
+PROMTAIL_CONFIG=promtail-config-cloud.yaml
+
 # OTEL metrics + logs (via OTEL Collector)
 GRAFANA_CLOUD_OTLP_ENDPOINT=https://otlp-gateway-<region>.grafana.net/otlp
 GRAFANA_CLOUD_INSTANCE_ID=<numeric-instance-id>
