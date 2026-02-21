@@ -83,18 +83,21 @@ for entry in os.listdir(output_dir):
     sa_dir = os.path.join(d, "subagents")
     if os.path.isdir(sa_dir):
         for sa in os.listdir(sa_dir):
-            sa_idx = os.path.join(sa_dir, sa, "index.html")
-            if not os.path.isfile(sa_idx):
+            sa_page = os.path.join(sa_dir, sa, "page-001.html")
+            if not os.path.isfile(sa_page):
                 continue
             p = MsgCounter()
-            with open(sa_idx) as f:
+            with open(sa_page) as f:
                 p.feed(f.read())
             if p.count == 0:
                 shutil.rmtree(os.path.join(sa_dir, sa))
                 removed += 1
     # Check main transcript
+    page = os.path.join(d, "page-001.html")
+    if not os.path.isfile(page):
+        continue
     p = MsgCounter()
-    with open(idx) as f:
+    with open(page) as f:
         p.feed(f.read())
     if p.count == 0:
         shutil.rmtree(d)
@@ -148,7 +151,10 @@ generate() {
 
     mkdir -p "$session_dir"
     echo "  Processing session: $session_id"
-    if ! claude-code-transcripts json "$session_file" -o "$session_dir"; then
+    _cct_output=$(claude-code-transcripts json "$session_file" -o "$session_dir" 2>&1)
+    _cct_exit=$?
+    echo "$_cct_output" | grep -v "Could not auto-detect GitHub repo" || true
+    if [ "$_cct_exit" -ne 0 ]; then
       echo "  ERROR: failed to generate transcript for $session_file" >&2
       failed=$((failed + 1))
       continue
@@ -157,7 +163,10 @@ generate() {
   done < <(find "$PROJECTS_DIR" "$BACKUP_DIR" -name "*.jsonl" -type f)
 
   # Generate the combined index using 'all' command
-  if ! claude-code-transcripts all -s "$PROJECTS_DIR" -o "$OUTPUT_DIR/all" -q; then
+  _all_output=$(claude-code-transcripts all -s "$PROJECTS_DIR" -o "$OUTPUT_DIR/all" -q 2>&1)
+  _all_exit=$?
+  echo "$_all_output" | grep -v "Could not auto-detect GitHub repo" || true
+  if [ "$_all_exit" -ne 0 ]; then
     echo "  ERROR: failed to generate combined transcript index" >&2
     failed=$((failed + 1))
   fi
