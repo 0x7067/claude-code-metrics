@@ -62,7 +62,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${prometheus_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -120,7 +120,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "max(max_over_time(claude_code_cost_usage_USD_total{session_id=\"$session_id\"}[$__range]))",
           "instant": true,
@@ -133,7 +133,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${prometheus_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -183,7 +183,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "sum(max by (type) (max_over_time(claude_code_token_usage_tokens_total{session_id=\"$session_id\"}[$__range])))",
           "instant": true,
@@ -196,7 +196,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${prometheus_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -245,7 +245,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "max(max_over_time(claude_code_active_time_seconds_total{session_id=\"$session_id\"}[$__range]))",
           "instant": true,
@@ -258,7 +258,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${prometheus_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -316,7 +316,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "sum(max_over_time(claude_code_token_usage_tokens_total{session_id=\"$session_id\",type=\"cacheRead\"}[$__range])) / clamp_min((sum(max_over_time(claude_code_token_usage_tokens_total{session_id=\"$session_id\",type=\"cacheRead\"}[$__range])) + sum(max_over_time(claude_code_token_usage_tokens_total{session_id=\"$session_id\",type=\"input\"}[$__range]))), 1) * 100",
           "instant": true,
@@ -329,7 +329,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${prometheus_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -368,7 +368,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "sum by (model) (max_over_time(claude_code_token_usage_tokens_total{session_id=\"$session_id\"}[$__range]))",
           "legendFormat": "{{model}}",
@@ -396,7 +396,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${prometheus_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -523,7 +523,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "sum(increase(claude_code_token_usage_tokens_total{session_id=\"$session_id\",type=\"input\"}[$__rate_interval]))",
           "legendFormat": "Input",
@@ -532,7 +532,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "sum(increase(claude_code_token_usage_tokens_total{session_id=\"$session_id\",type=\"output\"}[$__rate_interval]))",
           "legendFormat": "Output",
@@ -541,7 +541,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "sum(increase(claude_code_token_usage_tokens_total{session_id=\"$session_id\",type=\"cacheRead\"}[$__rate_interval]))",
           "legendFormat": "Cache Read",
@@ -550,7 +550,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "sum(increase(claude_code_token_usage_tokens_total{session_id=\"$session_id\",type=\"cacheCreation\"}[$__rate_interval]))",
           "legendFormat": "Cache Write",
@@ -577,7 +577,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${prometheus_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -658,7 +658,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "max(claude_code_cost_usage_USD_total{session_id=\"$session_id\"})",
           "legendFormat": "Cumulative Cost",
@@ -672,7 +672,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${prometheus_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -758,7 +758,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "max(max_over_time(claude_code_lines_of_code_count_total{session_id=\"$session_id\",type=\"added\"}[$__range])) or vector(0)",
           "legendFormat": "Added",
@@ -768,7 +768,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "max(max_over_time(claude_code_lines_of_code_count_total{session_id=\"$session_id\",type=\"removed\"}[$__range])) or vector(0)",
           "legendFormat": "Removed",
@@ -796,7 +796,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${prometheus_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -882,7 +882,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "max(max_over_time(claude_code_commit_count_total{session_id=\"$session_id\"}[$__range])) or vector(0)",
           "legendFormat": "Commits",
@@ -892,7 +892,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${prometheus_ds}"
           },
           "expr": "max(max_over_time(claude_code_pull_request_count_total{session_id=\"$session_id\"}[$__range])) or vector(0)",
           "legendFormat": "Pull Requests",
@@ -920,7 +920,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "loki"
+        "uid": "${loki_ds}"
       },
       "gridPos": {
         "h": 16,
@@ -944,7 +944,7 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "loki"
+            "uid": "${loki_ds}"
           },
           "expr": "{job=\"claude-transcripts\", session_id=\"$session_id\"}",
           "refId": "A"
@@ -969,7 +969,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "loki"
+        "uid": "${loki_ds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1028,42 +1028,6 @@
               {
                 "id": "displayName",
                 "value": "Tool Name"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "file_path"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "File Path"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "command"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Command"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "pattern"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Pattern"
               }
             ]
           },
@@ -1147,7 +1111,7 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "loki"
+            "uid": "${loki_ds}"
           },
           "expr": "{service_name=\"claude-code\"} | session_id=\"$session_id\" | event_name=\"tool_result\" | line_format \"{\\\"tool_name\\\": \\\"{{.tool_name}}\\\", \\\"duration_ms\\\": \\\"{{.duration_ms}}\\\", \\\"success\\\": \\\"{{.success}}\\\"}\"",
           "refId": "A"
@@ -1189,6 +1153,22 @@
   "templating": {
     "list": [
       {
+        "name": "prometheus_ds",
+        "label": "Prometheus",
+        "type": "datasource",
+        "query": "prometheus",
+        "hide": 2,
+        "current": {}
+      },
+      {
+        "name": "loki_ds",
+        "label": "Loki",
+        "type": "datasource",
+        "query": "loki",
+        "hide": 2,
+        "current": {}
+      },
+      {
         "current": {
           "selected": false,
           "text": "",
@@ -1196,7 +1176,7 @@
         },
         "datasource": {
           "type": "prometheus",
-          "uid": "prometheus"
+          "uid": "${prometheus_ds}"
         },
         "definition": "label_values(claude_code_session_count_total, session_id)",
         "hide": 0,
@@ -1238,5 +1218,5 @@
   "title": "Claude Code Session Details",
   "description": "Deep dive into a single Claude Code session — tokens, cost, conversation transcript, and tool calls.",
   "uid": "claude-code-session-details",
-  "version": 5
+  "version": 6
 }

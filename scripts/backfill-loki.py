@@ -51,6 +51,11 @@ def extract_project_name(filepath):
         return "unknown"
 
 
+def extract_session_id(filepath):
+    """Extract session ID from the JSONL filename (stem without .jsonl)."""
+    return Path(filepath).stem
+
+
 def build_tool_parameters(tool_name, input_dict):
     """Build tool_parameters JSON string for structured metadata."""
     if not isinstance(input_dict, dict):
@@ -73,6 +78,7 @@ def extract_tool_events(filepath):
     (user messages) by tool_use_id. Returns list of event dicts.
     """
     project = extract_project_name(filepath)
+    session_id = extract_session_id(filepath)
     # pending_tools: id -> {name, input, timestamp}
     pending_tools = {}
     events = []
@@ -143,6 +149,7 @@ def extract_tool_events(filepath):
                         events.append({
                             "timestamp_ns": str(int(ts * 1_000_000_000)),
                             "project": project,
+                            "session_id": session_id,
                             "tool_name": pending["name"],
                             "success": success,
                             "duration_ms": duration_ms,
@@ -181,6 +188,7 @@ def push_to_loki(events, loki_url, batch_size, dry_run=False):
                     "event_name": "tool_result",
                     "tool_name": ev["tool_name"],
                     "success": str(ev["success"]).lower(),
+                    "session_id": ev["session_id"],
                 }
                 if ev["duration_ms"] is not None:
                     metadata["duration_ms"] = str(ev["duration_ms"])

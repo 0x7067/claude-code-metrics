@@ -31,7 +31,6 @@ scrape_configs:
             model: message.model
             content: message.content
             hook_name: data.hookName
-            tool_result: message.result
 
       # Extract project from file path
       - regex:
